@@ -1,0 +1,103 @@
+.main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    min-height: 80vh;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    color: var(--color-accent);
+}
+
+.eventsList {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.eventCard {
+    display: flex;
+    background-color: var(--color-surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.eventCard:hover {
+    transform: translateX(10px);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-md);
+    background-color: var(--color-surface-hover);
+}
+
+.dateBox {
+    background-color: var(--color-primary-dark);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dateText {
+    color: var(--color-accent);
+    font-weight: 700;
+    font-size: 1.4rem;
+    font-family: var(--font-subheading);
+    letter-spacing: 1px;
+}
+
+.content {
+    padding: 2rem;
+    flex: 1;
+}
+
+.eventTitle {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-accent);
+}
+
+.description {
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .eventCard {
+        flex-direction: column;
+    }
+
+    .dateBox {
+        min-width: auto;
+        padding: 1rem;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .eventCard {
+        flex-direction: column;
+    }
+
+    .dateBox {
+        min-width: auto;
+        padding: 1rem;
+    }
+}

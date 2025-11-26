@@ -1,0 +1,87 @@
+.main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    min-height: 80vh;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    color: var(--color-accent);
+}
+
+.tableWrapper {
+    overflow-x: auto;
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    border: 1px solid var(--color-primary);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.table th,
+.table td {
+    padding: 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table th {
+    background-color: var(--color-primary);
+    color: var(--color-accent);
+    font-weight: 600;
+    text-align: left;
+    padding: 1.5rem 1rem;
+    font-family: var(--font-subheading);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.rank {
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+.team {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.points {
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .tableWrapper {
+        margin: 0 -1rem;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .table th,
+    .table td {
+        padding: 1rem 0.5rem;
+        font-size: 0.9rem;
+    }
+}

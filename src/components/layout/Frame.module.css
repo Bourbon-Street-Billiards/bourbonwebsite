@@ -1,0 +1,80 @@
+.frameContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99;
+    padding: 20px;
+}
+
+.cornerTL,
+.cornerTR,
+.cornerBL,
+.cornerBR {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: var(--color-accent);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.cornerTL {
+    top: 20px;
+    left: 20px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+}
+
+.cornerTR {
+    top: 20px;
+    right: 20px;
+    border-top: 1px solid;
+    border-right: 1px solid;
+}
+
+.cornerBL {
+    bottom: 20px;
+    left: 20px;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+}
+
+.cornerBR {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+}
+
+.verticalTextLeft,
+.verticalTextRight {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-subheading);
+    font-size: 0.9rem;
+    letter-spacing: 6px;
+    color: var(--color-accent);
+    opacity: 0.8;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-weight: 600;
+}
+
+.verticalTextLeft {
+    left: 20px;
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.verticalTextRight {
+    right: 20px;
+}
+
+@media (max-width: 768px) {
+    .frameContainer {
+        display: none;
+    }
+}

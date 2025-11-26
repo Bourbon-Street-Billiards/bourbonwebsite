@@ -1,0 +1,61 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Weekly 8-Ball Tournament",
+      "date": "Every Thursday, 7:00 PM",
+      "description": "Join us for our weekly 8-ball tournament. $20 entry fee, winner takes all."
+    },
+    {
+      "id": 2,
+      "title": "Live Jazz Night",
+      "date": "Friday, November 24th, 8:00 PM",
+      "description": "Enjoy live smooth jazz while you play. Featuring the Bourbon Trio."
+    }
+  ],
+  "menu": [
+    {
+      "title": "Small Plates",
+      "items": [
+        {
+          "name": "Bourbon Glazed Wings",
+          "price": "$15",
+          "description": "Crispy wings tossed in our signature bourbon glaze."
+        },
+        {
+          "name": "Truffle Fries",
+          "price": "$10",
+          "description": "Hand-cut fries with truffle oil and parmesan."
+        }
+      ]
+    },
+    {
+      "title": "Mains",
+      "items": [
+        {
+          "name": "The Hustler Burger",
+          "price": "$18",
+          "description": "Wagyu beef, cheddar, bacon jam, brioche bun."
+        }
+      ]
+    }
+  ],
+  "league": [
+    {
+      "rank": 1,
+      "team": "The Breakers",
+      "played": 10,
+      "won": 9,
+      "lost": 1,
+      "points": 27
+    },
+    {
+      "rank": 2,
+      "team": "Cue Masters",
+      "played": 10,
+      "won": 7,
+      "lost": 3,
+      "points": 21
+    }
+  ]
+}
