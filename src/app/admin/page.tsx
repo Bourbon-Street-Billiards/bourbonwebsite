@@ -1,18 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Skeleton from '@/components/ui/Skeleton';
 import styles from './page.module.css';
-import { AppData, Event, MenuCategory, LeagueTeam } from '@/lib/data';
+import { AppData, Event, MenuCategory, LeagueTeam, BilliardRate } from '@/lib/data';
 
 export default function AdminDashboard() {
     const [data, setData] = useState<AppData | null>(null);
-    const [activeTab, setActiveTab] = useState<'events' | 'menu' | 'league'>('events');
+    const [activeTab, setActiveTab] = useState<'events' | 'menu' | 'league' | 'rates'>('events');
     const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
+
+    // Debounce ref
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         // Check auth
@@ -37,23 +42,38 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleSave = async () => {
-        if (!data) return;
+    const saveData = async (newData: AppData) => {
+        setSaving(true);
         try {
             const res = await fetch('/api/admin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: JSON.stringify(newData),
             });
             if (res.ok) {
-                alert('Data saved successfully!');
+                setLastSaved(new Date());
             } else {
-                alert('Failed to save data.');
+                console.error('Failed to save data');
             }
         } catch (error) {
             console.error('Failed to save data', error);
-            alert('Error saving data.');
+        } finally {
+            setSaving(false);
         }
+    };
+
+    const handleDataChange = (newData: AppData) => {
+        setData(newData);
+
+        // Debounce save
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        setSaving(true); // Show saving immediately for better UX
+        timeoutRef.current = setTimeout(() => {
+            saveData(newData);
+        }, 1000);
     };
 
     const handleLogout = () => {
@@ -65,7 +85,7 @@ export default function AdminDashboard() {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
-    const handleTabChange = (tab: 'events' | 'menu' | 'league') => {
+    const handleTabChange = (tab: 'events' | 'menu' | 'league' | 'rates') => {
         setActiveTab(tab);
         setIsMobileMenuOpen(false); // Close menu on selection
     };
@@ -77,6 +97,7 @@ export default function AdminDashboard() {
                     <Skeleton width={150} height={32} />
                 </div>
                 <nav className={styles.nav}>
+                    <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
                     <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
                     <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
                     <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
@@ -133,6 +154,12 @@ export default function AdminDashboard() {
                     >
                         League
                     </button>
+                    <button
+                        className={`${styles.navItem} ${activeTab === 'rates' ? styles.active : ''}`}
+                        onClick={() => handleTabChange('rates')}
+                    >
+                        Rates
+                    </button>
                     <button onClick={handleLogout} className={styles.logoutButton}>
                         Logout
                     </button>
@@ -144,18 +171,29 @@ export default function AdminDashboard() {
                     <h1 className={styles.pageTitle}>
                         {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management
                     </h1>
-                    <Button onClick={handleSave}>Save Changes</Button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        {saving ? (
+                            <span style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }}>Saving...</span>
+                        ) : lastSaved ? (
+                            <span style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
+                                Saved {lastSaved.toLocaleTimeString()}
+                            </span>
+                        ) : null}
+                    </div>
                 </div>
 
                 <div className={styles.section}>
                     {activeTab === 'events' && (
-                        <EventsEditor events={data.events} onChange={(events) => setData({ ...data, events })} />
+                        <EventsEditor events={data.events} onChange={(events) => handleDataChange({ ...data, events })} />
                     )}
                     {activeTab === 'menu' && (
-                        <MenuEditor menu={data.menu} onChange={(menu) => setData({ ...data, menu })} />
+                        <MenuEditor menu={data.menu} onChange={(menu) => handleDataChange({ ...data, menu })} />
                     )}
                     {activeTab === 'league' && (
-                        <LeagueEditor league={data.league} onChange={(league) => setData({ ...data, league })} />
+                        <LeagueEditor league={data.league} onChange={(league) => handleDataChange({ ...data, league })} />
+                    )}
+                    {activeTab === 'rates' && (
+                        <RatesEditor rates={data.rates} onChange={(rates) => handleDataChange({ ...data, rates })} />
                     )}
                 </div>
             </main>
@@ -164,6 +202,7 @@ export default function AdminDashboard() {
 }
 
 function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events: Event[]) => void }) {
+    // ... (existing EventsEditor code)
     const [eventModal, setEventModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -179,7 +218,7 @@ function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events
         setEventModal({
             isOpen: true,
             mode: 'add',
-            data: { id: Date.now(), title: '', date: '', description: '' }
+            data: { id: Math.floor(Math.random() * 1000000000), title: '', date: '', description: '' }
         });
     };
 
@@ -283,6 +322,7 @@ function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events
 }
 
 function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu: MenuCategory[]) => void }) {
+    // ... (existing MenuEditor code)
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [newCategoryTitle, setNewCategoryTitle] = useState('');
 
@@ -475,6 +515,7 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
 }
 
 function LeagueEditor({ league, onChange }: { league: LeagueTeam[]; onChange: (league: LeagueTeam[]) => void }) {
+    // ... (existing LeagueEditor code)
     const [teamModal, setTeamModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -645,6 +686,125 @@ function LeagueEditor({ league, onChange }: { league: LeagueTeam[]; onChange: (l
                         ))}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    );
+}
+
+function RatesEditor({ rates, onChange }: { rates: BilliardRate[]; onChange: (rates: BilliardRate[]) => void }) {
+    const [rateModal, setRateModal] = useState<{
+        isOpen: boolean;
+        mode: 'add' | 'edit';
+        index?: number;
+        data: BilliardRate;
+    }>({
+        isOpen: false,
+        mode: 'add',
+        data: { id: 0, title: '', price: '', description: '' }
+    });
+
+    const openAddRate = () => {
+        setRateModal({
+            isOpen: true,
+            mode: 'add',
+            data: { id: Math.floor(Math.random() * 1000000000), title: '', price: '', description: '' }
+        });
+    };
+
+    const openEditRate = (index: number, rate: BilliardRate) => {
+        setRateModal({
+            isOpen: true,
+            mode: 'edit',
+            index,
+            data: { ...rate }
+        });
+    };
+
+    const closeRateModal = () => {
+        setRateModal({ ...rateModal, isOpen: false });
+    };
+
+    const saveRate = () => {
+        const { index, mode, data } = rateModal;
+        if (!data.title || !data.price) return;
+
+        const newRates = [...rates];
+        if (mode === 'add') {
+            newRates.push(data);
+        } else if (mode === 'edit' && index !== undefined) {
+            newRates[index] = data;
+        }
+        onChange(newRates);
+        closeRateModal();
+    };
+
+    const removeRate = (index: number) => {
+        if (confirm('Delete this rate?')) {
+            const newRates = rates.filter((_, i) => i !== index);
+            onChange(newRates);
+        }
+    };
+
+    return (
+        <div>
+            <Button onClick={openAddRate} variant="outline" className={styles.addButton}>+ Add Rate</Button>
+
+            {rateModal.isOpen && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modal}>
+                        <h3 className={styles.modalTitle}>{rateModal.mode === 'add' ? 'Add Rate' : 'Edit Rate'}</h3>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Title</label>
+                            <input
+                                className={styles.input}
+                                value={rateModal.data.title}
+                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, title: e.target.value } })}
+                                placeholder="e.g., Hourly Rate"
+                                autoFocus
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Price</label>
+                            <input
+                                className={styles.input}
+                                value={rateModal.data.price}
+                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, price: e.target.value } })}
+                                placeholder="$0.00"
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Description</label>
+                            <textarea
+                                className={styles.textarea}
+                                value={rateModal.data.description}
+                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, description: e.target.value } })}
+                                placeholder="Details..."
+                            />
+                        </div>
+                        <div className={styles.modalActions}>
+                            <Button onClick={closeRateModal} variant="outline">Cancel</Button>
+                            <Button onClick={saveRate}>{rateModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div className={styles.cardGrid}>
+                {rates.map((rate, index) => (
+                    <div key={rate.id} className={styles.compactItem}>
+                        <div className={styles.compactInfo}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
+                                <span className={styles.compactName}>{rate.title}</span>
+                                <span className={styles.compactPrice}>{rate.price}</span>
+                            </div>
+                            <span className={styles.compactDesc}>{rate.description}</span>
+                        </div>
+                        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
+                            <Button onClick={() => openEditRate(index, rate)} variant="outline" className={styles.smallButton}>Edit</Button>
+                            <Button onClick={() => removeRate(index)} variant="outline" className={styles.smallButton + ' ' + styles.deleteBtn}>Delete</Button>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

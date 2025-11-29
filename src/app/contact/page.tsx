@@ -1,7 +1,9 @@
-import Button from '@/components/ui/Button';
+import { getData } from '@/lib/data';
 import styles from './page.module.css';
 
-export default function ContactPage() {
+export default async function ContactPage() {
+    const { rates } = await getData();
+
     return (
         <main className={styles.main}>
             <h1 className={styles.title}>Contact Us</h1>
@@ -10,40 +12,34 @@ export default function ContactPage() {
                 <div className={styles.infoSection}>
                     <div className={styles.infoBlock}>
                         <h2 className={styles.infoTitle}>Location</h2>
-                        <p className={styles.infoText}>123 Main St</p>
-                        <p className={styles.infoText}>Anytown, USA 12345</p>
+                        <p className={styles.infoText}>241 Vaughan St</p>
+                        <p className={styles.infoText}>Winnipeg, MB, Canada</p>
                     </div>
 
                     <div className={styles.infoBlock}>
                         <h2 className={styles.infoTitle}>Hours</h2>
-                        <p className={styles.infoText}>Mon - Thu: 4pm - 12am</p>
-                        <p className={styles.infoText}>Fri - Sat: 4pm - 2am</p>
-                        <p className={styles.infoText}>Sun: 4pm - 12am</p>
+                        <p className={styles.infoText}>Sun - Thu: 10am - 3am</p>
+                        <p className={styles.infoText}>Fri - Sat: 10am - 4am</p>
                     </div>
 
                     <div className={styles.infoBlock}>
                         <h2 className={styles.infoTitle}>Contact</h2>
-                        <p className={styles.infoText}>(555) 123-4567</p>
-                        <p className={styles.infoText}>info@bourbonpoolhall.com</p>
+                        <p className={styles.infoText}>204-957-1293</p>
                     </div>
                 </div>
 
-                <form className={styles.form}>
-                    <h2 className={styles.formTitle}>Send us a message</h2>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="name" className={styles.label}>Name</label>
-                        <input type="text" id="name" className={styles.input} required />
+                <div className={styles.ratesSection}>
+                    <h2 className={styles.ratesTitle}>Billiard Rates</h2>
+                    <div className={styles.ratesGrid}>
+                        {rates.map((rate) => (
+                            <div key={rate.id} className={styles.rateCard}>
+                                <h3 className={styles.rateName}>{rate.title}</h3>
+                                <div className={styles.ratePrice}>{rate.price}</div>
+                                <p className={styles.rateDesc}>{rate.description}</p>
+                            </div>
+                        ))}
                     </div>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="email" className={styles.label}>Email</label>
-                        <input type="email" id="email" className={styles.input} required />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="message" className={styles.label}>Message</label>
-                        <textarea id="message" rows={5} className={styles.textarea} required></textarea>
-                    </div>
-                    <Button>Send Message</Button>
-                </form>
+                </div>
             </div>
         </main>
     );

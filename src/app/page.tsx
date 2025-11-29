@@ -19,11 +19,15 @@ export default function Home() {
             <section className={styles.features}>
                 <div className={styles.featureCard}>
                     <h2 className={styles.featureTitle}>Professional Tables</h2>
-                    <p className={styles.featureText}>Play on our 12 regulation size Diamond tables, maintained daily for perfect roll.</p>
+                    <p className={styles.featureText}>Play on 11 billiard tables, 5 full-size snooker tables, and 6 coin-operated bar boxes — each maintained daily to ensure a smooth, consistent roll.</p>
                 </div>
                 <div className={styles.featureCard}>
-                    <h2 className={styles.featureTitle}>Craft Cocktails</h2>
-                    <p className={styles.featureText}>Enjoy our signature bourbon selection and handcrafted cocktails while you play.</p>
+                    <h2 className={styles.featureTitle}>Weekly Specials</h2>
+                    <p className={styles.featureText}>Enjoy our Monday Special for two players and discounted rates every Sunday.</p>
+                </div>
+                <div className={styles.featureCard}>
+                    <h2 className={styles.featureTitle}>Leagues & Tournaments</h2>
+                    <p className={styles.featureText}>Join our competitive leagues or participate in weekly tournaments for all skill levels.</p>
                 </div>
                 <div className={styles.featureCard}>
                     <h2 className={styles.featureTitle}>Leagues & Tournaments</h2>

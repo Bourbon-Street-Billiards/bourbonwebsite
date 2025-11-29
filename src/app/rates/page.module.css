@@ -1,0 +1,63 @@
+.main {
+    max-width: 1000px;
+    margin: 0 auto;
+    /* padding: 4rem 1rem; */
+    min-height: 80vh;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 4rem;
+    text-align: center;
+    color: var(--color-accent);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    background: var(--color-surface);
+    border: 1px solid rgba(196, 184, 150, 0.1);
+    padding: 2rem;
+    border-radius: 4px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-md);
+}
+
+.cardTitle {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+.price {
+    font-size: 2.5rem;
+    color: var(--color-accent);
+    font-family: var(--font-heading);
+    margin-bottom: 1.5rem;
+}
+
+.description {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

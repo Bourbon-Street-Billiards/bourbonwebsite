@@ -37,3 +37,10 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS billiard_rates (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    price VARCHAR(50) NOT NULL,
+    description TEXT
+);

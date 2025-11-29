@@ -1,0 +1,22 @@
+.container {
+    padding: var(--header-height) 1rem 4rem;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.title {
+    margin: 0 auto 4rem;
+    display: block;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}

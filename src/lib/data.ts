@@ -27,10 +27,18 @@ export interface LeagueTeam {
     points: number;
 }
 
+export interface BilliardRate {
+    id: number;
+    title: string;
+    price: string;
+    description: string;
+}
+
 export interface AppData {
     events: Event[];
     menu: MenuCategory[];
     league: LeagueTeam[];
+    rates: BilliardRate[];
 }
 
 export async function getData(): Promise<AppData> {
@@ -41,6 +49,7 @@ export async function getData(): Promise<AppData> {
         // Fetch menu categories and items
         const categoriesRes = await pool.query('SELECT * FROM menu_categories ORDER BY id ASC');
         const itemsRes = await pool.query('SELECT * FROM menu_items');
+        const ratesRes = await pool.query('SELECT * FROM billiard_rates ORDER BY id ASC');
 
         const menu: MenuCategory[] = categoriesRes.rows.map((cat: any) => {
             return {
@@ -56,8 +65,8 @@ export async function getData(): Promise<AppData> {
         });
 
         // Fallback for empty DB to avoid breaking UI on first load
-        if (eventsRes.rows.length === 0 && leagueRes.rows.length === 0 && menu.length === 0) {
-            return { events: [], menu: [], league: [] };
+        if (eventsRes.rows.length === 0 && leagueRes.rows.length === 0 && menu.length === 0 && ratesRes.rows.length === 0) {
+            return { events: [], menu: [], league: [], rates: [] };
         }
 
         return {
@@ -75,12 +84,18 @@ export async function getData(): Promise<AppData> {
                 won: row.won,
                 lost: row.lost,
                 points: row.points
+            })),
+            rates: ratesRes.rows.map((row: any) => ({
+                id: Number(row.id),
+                title: row.title,
+                price: row.price,
+                description: row.description
             }))
         };
     } catch (error) {
         console.error('Database Error:', error);
         // Return empty structure on error to prevent crash, but log it
-        return { events: [], menu: [], league: [] };
+        return { events: [], menu: [], league: [], rates: [] };
     }
 }
 
@@ -90,7 +105,7 @@ export async function saveData(data: AppData) {
         await client.query('BEGIN');
 
         // Clear existing data (full replace strategy)
-        await client.query('TRUNCATE events, menu_categories, menu_items, league_teams RESTART IDENTITY CASCADE');
+        await client.query('TRUNCATE events, menu_categories, menu_items, league_teams, billiard_rates RESTART IDENTITY CASCADE');
 
         // Insert Events
         for (const event of data.events) {
@@ -121,6 +136,14 @@ export async function saveData(data: AppData) {
             await client.query(
                 'INSERT INTO league_teams (rank, team, played, won, lost, points) VALUES ($1, $2, $3, $4, $5, $6)',
                 [team.rank, team.team, team.played, team.won, team.lost, team.points]
+            );
+        }
+
+        // Insert Rates
+        for (const rate of data.rates) {
+            await client.query(
+                'INSERT INTO billiard_rates (id, title, price, description) VALUES ($1, $2, $3, $4)',
+                [rate.id, rate.title, rate.price, rate.description]
             );
         }
 

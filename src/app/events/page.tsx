@@ -7,7 +7,7 @@ export default async function EventsPage() {
         <main className={styles.main}>
             <h1 className={styles.title}>Upcoming Events</h1>
             <div className={styles.eventsList}>
-                {events.map((event) => (
+                {events?.length ? events.map((event) => (
                     <div key={event.id} className={styles.eventCard}>
                         <div className={styles.dateBox}>
                             <span className={styles.dateText}>{event.date}</span>
@@ -17,7 +17,7 @@ export default async function EventsPage() {
                             <p className={styles.description}>{event.description}</p>
                         </div>
                     </div>
-                ))}
+                )) : <p>No events found</p>}
             </div>
         </main>
     );

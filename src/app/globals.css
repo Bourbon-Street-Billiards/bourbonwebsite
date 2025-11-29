@@ -27,12 +27,18 @@
   --glass-bg: rgba(20, 24, 20, 0.85);
   --glass-border: 1px solid rgba(196, 184, 150, 0.1);
   --glass-backdrop: blur(12px);
+
+  --header-height: 92px;
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+main {
+  padding: var(--header-height) 1rem 3rem;
 }
 
 html,

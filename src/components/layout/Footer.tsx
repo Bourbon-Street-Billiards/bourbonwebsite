@@ -6,16 +6,17 @@ export default function Footer() {
             <div className={styles.container}>
                 <div className={styles.section}>
                     <h3 className={styles.heading}>Bourbon Street Billiards</h3>
-                    <p className={styles.text}>Where elegance meets the game.</p>
+                    <p className={styles.text}>Est.1962 - Best Tables in Winnipeg</p>
                 </div>
                 <div className={styles.section}>
                     <h4 className={styles.subheading}>Contact</h4>
-                    <p className={styles.text}>123 Main St, Anytown, USA</p>
-                    <p className={styles.text}>(555) 123-4567</p>
+                    <p className={styles.text}>241 Vaughan St, Winnipeg, MB, Canada</p>
+                    <p className={styles.text}>204-957-1293</p>
                 </div>
                 <div className={styles.section}>
                     <h4 className={styles.subheading}>Hours</h4>
-                    <p className={styles.text}>Mon-Sun: 4pm - 2am</p>
+                    <p className={styles.text}>Sun-Thurs: 10am - 3am</p>
+                    <p className={styles.text}>Fri-Sat: 10am - 4am</p>
                 </div>
             </div>
             <div className={styles.copyright}>
