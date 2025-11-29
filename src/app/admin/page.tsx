@@ -76,9 +76,14 @@ export default function AdminDashboard() {
         }, 1000);
     };
 
-    const handleLogout = () => {
-        document.cookie = 'admin_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        router.push('/admin/login');
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            router.push('/admin/login');
+            router.refresh();
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
     };
 
     const toggleMobileMenu = () => {

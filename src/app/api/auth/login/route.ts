@@ -38,6 +38,15 @@ export async function POST(request: Request) {
             path: '/',
         });
 
+        // Set client-side readable cookie for middleware/client checks
+        cookieStore.set('admin_auth', 'true', {
+            httpOnly: false, // Allow client to read this
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24, // 1 day
+            path: '/',
+        });
+
         return NextResponse.json({ success: true });
 
     } catch (error) {
