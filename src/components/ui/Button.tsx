@@ -7,9 +7,10 @@ interface ButtonProps {
     onClick?: () => void;
     variant?: 'primary' | 'outline';
     className?: string;
+    disabled?: boolean;
 }
 
-export default function Button({ children, href, onClick, variant = 'primary', className = '' }: ButtonProps) {
+export default function Button({ children, href, onClick, variant = 'primary', className = '', disabled }: ButtonProps) {
     const rootClassName = `${styles.button} ${styles[variant]} ${className}`;
 
     if (href) {
@@ -21,7 +22,7 @@ export default function Button({ children, href, onClick, variant = 'primary', c
     }
 
     return (
-        <button onClick={onClick} className={rootClassName}>
+        <button onClick={onClick} className={rootClassName} disabled={disabled}>
             {children}
         </button>
     );

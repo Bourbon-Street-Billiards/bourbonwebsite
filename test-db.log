@@ -1,0 +1,7 @@
+Connecting...
+Connected!
+Query result: {"now":"2025-11-29T18:33:17.579Z"}
+Connecting...
+Connected!
+Events count: 2
+Events: [{"id":"1701234567890","title":"Live Jazz Night","date":"Nov 30, 8PM","description":"Enjoy smooth jazz with our house band."},{"id":"1701234567891","title":"9-Ball Tournament","date":"Dec 05, 7PM","description":"Weekly 9-ball tournament. $20 entry."}]
