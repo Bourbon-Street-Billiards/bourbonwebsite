@@ -27,11 +27,12 @@ export default function Home() {
                 </div>
                 <div className={styles.featureCard}>
                     <h2 className={styles.featureTitle}>Leagues & Tournaments</h2>
-                    <p className={styles.featureText}>Join our competitive leagues or participate in weekly tournaments for all skill levels.</p>
+                    <p className={styles.featureText}>Join our competitive leagues or participate in tournaments for all skill levels.</p>
                 </div>
                 <div className={styles.featureCard}>
-                    <h2 className={styles.featureTitle}>Leagues & Tournaments</h2>
-                    <p className={styles.featureText}>Join our competitive leagues or participate in weekly tournaments for all skill levels.</p>
+                    <h2 className={styles.featureTitle}>Food & Drink</h2>
+                    <p className={styles.featureText}>Enjoy a full menu of snacks, meals, and drinks — from classic pub food to refreshing cocktails,
+                        all served right to your table.</p>
                 </div>
             </section>
 
