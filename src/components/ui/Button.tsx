@@ -5,7 +5,7 @@ interface ButtonProps {
     children: React.ReactNode;
     href?: string;
     onClick?: () => void;
-    variant?: 'primary' | 'outline';
+    variant?: 'primary' | 'outline' | 'disabled' | 'delete';
     className?: string;
     disabled?: boolean;
 }
@@ -22,7 +22,7 @@ export default function Button({ children, href, onClick, variant = 'primary', c
     }
 
     return (
-        <button onClick={onClick} className={rootClassName} disabled={disabled}>
+        <button onClick={onClick} className={rootClassName + (disabled ? ' ' + styles.disabled : '')} disabled={disabled}>
             {children}
         </button>
     );

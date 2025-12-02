@@ -1,8 +1,20 @@
+'use client';
+
 import styles from './Footer.module.css';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+    const pathname = usePathname();
+    const [isPanel, setIsPanel] = useState(false);
+
+    useEffect(() => {
+        if (pathname?.startsWith('/panel')) setIsPanel(true);
+        else setIsPanel(false);
+    }, [pathname]);
+
     return (
-        <footer className={styles.footer}>
+        <footer className={styles.footer + (isPanel ? ' ' + styles.panelFooter : '')}>
             <div className={styles.container}>
                 <div className={styles.section}>
                     <h3 className={styles.heading}>Bourbon Street Billiards</h3>

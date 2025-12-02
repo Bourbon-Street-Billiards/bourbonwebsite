@@ -13,10 +13,20 @@
     background-color: #141814;
     border-right: 1px solid rgba(196, 184, 150, 0.1);
     padding: 2rem;
+    padding-top: calc(var(--header-height) + 2rem);
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
+    top: 0;
     overflow-y: auto;
+    width: 250px;
+    position: fixed;
+    animation: all 1s ease-out;
+}
+
+.sidebar.scrolled {
+    animation: all 1s ease-out;
+
 }
 
 .sidebarHeader {
@@ -30,6 +40,12 @@
     color: var(--color-accent);
     font-size: 1.5rem;
     margin: 0;
+}
+
+.editorContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .nav {
@@ -83,6 +99,8 @@
 }
 
 .mainContent {
+    width: calc(100vw - 250px);
+    margin-left: 250px;
     padding: 2rem 3rem;
     overflow-y: auto;
     height: 100%;
@@ -91,10 +109,17 @@
 .topBar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
     margin-bottom: 3rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid rgba(196, 184, 150, 0.1);
+}
+
+.syncStatus {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
 }
 
 .pageTitle {
@@ -156,6 +181,7 @@
 
 .input,
 .textarea {
+    font-size: 1rem;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(196, 184, 150, 0.2);
@@ -183,21 +209,6 @@
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.deleteBtn {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid #ff4d4d;
-    color: #ff4d4d;
-    cursor: pointer;
-    font-size: 0.9rem;
-    opacity: 0.7;
-    transition: all 0.2s;
-}
-
-.deleteBtn:hover {
-    background-color: #ff4d4d;
-    opacity: 1;
 }
 
 /* Table Styles for League */
@@ -398,6 +409,8 @@
     }
 
     .sidebar {
+        height: calc(100vh - var(--header-height));
+        padding-top: 0;
         position: fixed;
         top: var(--header-height);
         /* Below mobile header */
@@ -410,15 +423,24 @@
         border-right: none;
     }
 
+    .sidebarHeader {
+        display: none;
+    }
+
     .sidebar.open {
         transform: translateX(0);
     }
 
     .mobileHeader {
+        position: fixed;
+        width: 100%;
+        height: 96px;
         display: flex;
     }
 
     .mainContent {
+        width: 100%;
+        margin-left: 0;
         padding: 1.5rem;
         height: auto;
         overflow: visible;

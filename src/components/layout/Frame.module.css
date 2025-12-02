@@ -25,19 +25,16 @@
     pointer-events: none;
     overflow: hidden;
 
-    &::after {
+    /* &::after {
         content: '';
         display: block;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        border-right: 1px solid var(--color-accent);
-        border-bottom: 1px solid var(--color-accent);
-        border-left: none;
-        border-top: none;
+        width: 20px;
+        height: 20px;
+        border-right: 1px dashed var(--color-accent);
+        border-bottom: 1px dashed var(--color-accent);
         opacity: 0.5;
         pointer-events: none;
-    }
+    } */
 }
 
 .cornerTL {

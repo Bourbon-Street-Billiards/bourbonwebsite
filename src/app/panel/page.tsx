@@ -16,6 +16,17 @@ export default function AdminDashboard() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
 
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     // Debounce ref
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -23,7 +34,7 @@ export default function AdminDashboard() {
         // Check auth
         const auth = document.cookie.includes('admin_auth=true');
         if (!auth) {
-            router.push('/admin/login');
+            router.push('/panel/login');
             return;
         }
 
@@ -32,7 +43,7 @@ export default function AdminDashboard() {
 
     const fetchData = async () => {
         try {
-            const res = await fetch('/api/admin');
+            const res = await fetch('/api/panel');
             const json = await res.json();
             setData(json);
         } catch (error) {
@@ -45,7 +56,7 @@ export default function AdminDashboard() {
     const saveData = async (newData: AppData) => {
         setSaving(true);
         try {
-            const res = await fetch('/api/admin', {
+            const res = await fetch('/api/panel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newData),
@@ -79,7 +90,7 @@ export default function AdminDashboard() {
     const handleLogout = async () => {
         try {
             await fetch('/api/auth/logout', { method: 'POST' });
-            router.push('/admin/login');
+            router.push('/panel/login');
             router.refresh();
         } catch (error) {
             console.error('Logout failed', error);
@@ -95,37 +106,6 @@ export default function AdminDashboard() {
         setIsMobileMenuOpen(false); // Close menu on selection
     };
 
-    if (loading) return (
-        <div className={styles.container}>
-            <aside className={styles.sidebar}>
-                <div className={styles.sidebarHeader}>
-                    <Skeleton width={150} height={32} />
-                </div>
-                <nav className={styles.nav}>
-                    <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
-                    <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
-                    <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
-                    <Skeleton width="100%" height={40} style={{ marginBottom: '0.5rem' }} />
-                </nav>
-            </aside>
-            <main className={styles.mainContent}>
-                <div className={styles.topBar}>
-                    <Skeleton width={200} height={40} />
-                    <Skeleton width={120} height={40} />
-                </div>
-                <div className={styles.section}>
-                    <div className={styles.cardGrid}>
-                        {[1, 2, 3, 4].map((i) => (
-                            <Skeleton key={i} width="100%" height={200} />
-                        ))}
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
-
-    if (!data) return <div className={styles.loading}>Error loading data.</div>;
-
     return (
         <div className={styles.container}>
             {/* Mobile Header */}
@@ -136,7 +116,7 @@ export default function AdminDashboard() {
                 </button>
             </div>
 
-            <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.open : ''}`}>
+            <aside className={`${styles.sidebar} ${isScrolled ? styles.scrolled : ''} ${isMobileMenuOpen ? styles.open : ''}`}>
                 <div className={styles.sidebarHeader}>
                     <h2 className={styles.sidebarTitle}>Bourbon Admin</h2>
                 </div>
@@ -171,43 +151,55 @@ export default function AdminDashboard() {
                 </nav>
             </aside>
 
+
             <main className={styles.mainContent}>
                 <div className={styles.topBar}>
                     <h1 className={styles.pageTitle}>
                         {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management
                     </h1>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        {saving ? (
-                            <span style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }}>Saving...</span>
-                        ) : lastSaved ? (
-                            <span style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
-                                Saved {lastSaved.toLocaleTimeString()}
-                            </span>
-                        ) : null}
+                    <div className={styles.syncStatus}>
+                        Status:
+                        {
+                            saving ? (
+                                <span style={{ color: 'var(--color-text-accent)' }}>Saving...</span>
+                            ) : lastSaved ? (
+                                <span style={{ color: 'var(--color-text-muted)' }}>
+                                    Saved {lastSaved.toLocaleTimeString()}
+                                </span>
+                            ) : (
+                                <span style={{ color: 'var(--color-text-muted)' }}>Everything synced</span>
+                            )
+                        }
                     </div>
                 </div>
 
-                <div className={styles.section}>
-                    {activeTab === 'events' && (
-                        <EventsEditor events={data.events} onChange={(events) => handleDataChange({ ...data, events })} />
-                    )}
-                    {activeTab === 'menu' && (
-                        <MenuEditor menu={data.menu} onChange={(menu) => handleDataChange({ ...data, menu })} />
-                    )}
-                    {activeTab === 'league' && (
-                        <LeagueEditor league={data.league} onChange={(league) => handleDataChange({ ...data, league })} />
-                    )}
-                    {activeTab === 'rates' && (
-                        <RatesEditor rates={data.rates} onChange={(rates) => handleDataChange({ ...data, rates })} />
-                    )}
-                </div>
-            </main>
-        </div>
+                {
+                    loading || !data ? (
+                        <EditorLoading />
+                    ) : (
+                        <div className={styles.section}>
+                            {activeTab === 'events' && (
+                                <EventsEditor events={data.events} onChange={(events) => handleDataChange({ ...data, events })} loading={loading} saving={saving} />
+                            )}
+                            {activeTab === 'menu' && (
+                                <MenuEditor menu={data.menu} onChange={(menu) => handleDataChange({ ...data, menu })} loading={loading} saving={saving} />
+                            )}
+                            {activeTab === 'league' && (
+                                <LeagueEditor league={data.league} onChange={(league) => handleDataChange({ ...data, league })} loading={loading} saving={saving} />
+                            )}
+                            {activeTab === 'rates' && (
+                                <RatesEditor rates={data.rates} onChange={(rates) => handleDataChange({ ...data, rates })} loading={loading} saving={saving} />
+                            )}
+                        </div>
+                    )
+                }
+
+            </main >
+        </div >
     );
 }
 
-function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events: Event[]) => void }) {
-    // ... (existing EventsEditor code)
+const EventsEditor = ({ events, onChange, saving, loading }: { events: Event[]; onChange: (events: Event[]) => void; saving: boolean; loading: boolean }) => {
     const [eventModal, setEventModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -262,8 +254,8 @@ function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events
     };
 
     return (
-        <div>
-            <Button onClick={openAddEvent} variant="outline" className={styles.addButton}>+ Add New Event</Button>
+        <div className={styles.editorContent}>
+            <Button disabled={loading || saving} onClick={openAddEvent} variant="outline" className={styles.addButton}>+ Add New Event</Button>
 
             {eventModal.isOpen && (
                 <div className={styles.modalOverlay}>
@@ -282,6 +274,7 @@ function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events
                         <div className={styles.formGroup}>
                             <label className={styles.label}>Date</label>
                             <input
+                                type="date"
                                 className={styles.input}
                                 value={eventModal.data.date}
                                 onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, date: e.target.value } })}
@@ -316,8 +309,8 @@ function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events
                             <span className={styles.compactDesc}>{event.description}</span>
                         </div>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                            <Button onClick={() => openEditEvent(index, event)} variant="outline" className={styles.smallButton}>Edit</Button>
-                            <Button onClick={() => removeEvent(index)} variant="outline" className={styles.smallButton + ' ' + styles.deleteBtn}>Delete</Button>
+                            <Button disabled={loading || saving} onClick={() => openEditEvent(index, event)} variant="outline" className={styles.smallButton}>Edit</Button>
+                            <Button disabled={loading || saving} onClick={() => removeEvent(index)} variant="delete" className={styles.smallButton}>Delete</Button>
                         </div>
                     </div>
                 ))}
@@ -326,8 +319,7 @@ function EventsEditor({ events, onChange }: { events: Event[]; onChange: (events
     );
 }
 
-function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu: MenuCategory[]) => void }) {
-    // ... (existing MenuEditor code)
+const MenuEditor = ({ menu, onChange, loading, saving }: { menu: MenuCategory[]; onChange: (menu: MenuCategory[]) => void; loading: boolean; saving: boolean }) => {
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [newCategoryTitle, setNewCategoryTitle] = useState('');
 
@@ -407,7 +399,7 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
 
     return (
         <div>
-            <Button onClick={() => setIsAddingCategory(true)} variant="outline" className={styles.addButton}>+ Add Category</Button>
+            <Button disabled={loading || saving} onClick={() => setIsAddingCategory(true)} variant="outline" className={styles.addButton}>+ Add Category</Button>
 
             {/* Category Modal */}
             {isAddingCategory && (
@@ -425,8 +417,8 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
                             />
                         </div>
                         <div className={styles.modalActions}>
-                            <Button onClick={() => setIsAddingCategory(false)} variant="outline">Cancel</Button>
-                            <Button onClick={addCategory}>Create</Button>
+                            <Button disabled={loading || saving} onClick={() => setIsAddingCategory(false)} variant="outline">Cancel</Button>
+                            <Button disabled={loading || saving} onClick={addCategory}>Create</Button>
                         </div>
                     </div>
                 </div>
@@ -466,8 +458,8 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
                             />
                         </div>
                         <div className={styles.modalActions}>
-                            <Button onClick={closeItemModal} variant="outline">Cancel</Button>
-                            <Button onClick={saveItem}>{itemModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                            <Button disabled={loading || saving} onClick={closeItemModal} variant="outline">Cancel</Button>
+                            <Button disabled={loading || saving} onClick={saveItem}>{itemModal.mode === 'add' ? 'Add' : 'Save'}</Button>
                         </div>
                     </div>
                 </div>
@@ -480,8 +472,8 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
                             {category.title}
                         </h3>
                         <div style={{ display: 'flex', gap: '1rem' }}>
-                            <Button onClick={() => openAddItem(catIndex)} variant="outline" className={styles.smallButton}>+ Add Item</Button>
-                            <Button onClick={() => deleteCategory(catIndex)} variant="outline" className={styles.smallButton + ' ' + styles.deleteBtn}>Delete Category</Button>
+                            <Button disabled={loading || saving} onClick={() => openAddItem(catIndex)} variant="outline" className={styles.smallButton}>+ Add Item</Button>
+                            <Button disabled={loading || saving} onClick={() => deleteCategory(catIndex)} variant="delete" className={styles.smallButton}>Delete Category</Button>
                         </div>
                     </div>
                     <div className={styles.cardGrid}>
@@ -496,6 +488,7 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
                                 </div>
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
                                     <Button
+                                        disabled={loading || saving}
                                         onClick={() => openEditItem(catIndex, itemIndex, item)}
                                         variant="outline"
                                         className={styles.smallButton}
@@ -503,9 +496,10 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
                                         Edit
                                     </Button>
                                     <Button
+                                        disabled={loading || saving}
                                         onClick={() => deleteItem(catIndex, itemIndex)}
-                                        variant="outline"
-                                        className={styles.smallButton + ' ' + styles.deleteBtn}
+                                        variant="delete"
+                                        className={styles.smallButton}
                                     >
                                         Delete
                                     </Button>
@@ -519,7 +513,7 @@ function MenuEditor({ menu, onChange }: { menu: MenuCategory[]; onChange: (menu:
     );
 }
 
-function LeagueEditor({ league, onChange }: { league: LeagueTeam[]; onChange: (league: LeagueTeam[]) => void }) {
+const LeagueEditor = ({ league, onChange }: { league: LeagueTeam[]; onChange: (league: LeagueTeam[]) => void }) => {
     // ... (existing LeagueEditor code)
     const [teamModal, setTeamModal] = useState<{
         isOpen: boolean;
@@ -696,7 +690,7 @@ function LeagueEditor({ league, onChange }: { league: LeagueTeam[]; onChange: (l
     );
 }
 
-function RatesEditor({ rates, onChange }: { rates: BilliardRate[]; onChange: (rates: BilliardRate[]) => void }) {
+const RatesEditor = ({ rates, onChange }: { rates: BilliardRate[]; onChange: (rates: BilliardRate[]) => void }) => {
     const [rateModal, setRateModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -806,10 +800,26 @@ function RatesEditor({ rates, onChange }: { rates: BilliardRate[]; onChange: (ra
                         </div>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
                             <Button onClick={() => openEditRate(index, rate)} variant="outline" className={styles.smallButton}>Edit</Button>
-                            <Button onClick={() => removeRate(index)} variant="outline" className={styles.smallButton + ' ' + styles.deleteBtn}>Delete</Button>
+                            <Button onClick={() => removeRate(index)} variant="delete" className={styles.smallButton}>Delete</Button>
                         </div>
                     </div>
                 ))}
+            </div>
+        </div>
+    );
+}
+
+const EditorLoading = () => {
+    return (
+        <div className={styles.section}>
+            <div className={styles.editorContent}>
+                <Skeleton width="100%" height={54} />
+                <div className={styles.cardGrid}>
+                    <Skeleton width="100%" height={147} />
+                    <Skeleton width="100%" height={147} />
+                    <Skeleton width="100%" height={147} />
+                    <Skeleton width="100%" height={147} />
+                </div>
             </div>
         </div>
     );

@@ -27,7 +27,7 @@ export default function AdminLogin() {
             const data = await res.json();
 
             if (res.ok) {
-                router.push('/admin');
+                router.push('/panel');
                 router.refresh(); // Refresh to update middleware state
             } else {
                 setError(data.error || 'Login failed');

@@ -6,7 +6,7 @@ import styles from './Frame.module.css';
 export default function Frame() {
     const pathname = usePathname();
 
-    if (pathname?.startsWith('/admin')) return null;
+    if (pathname?.startsWith('/panel')) return null;
 
     return (
         <div className={styles.frameContainer}>
