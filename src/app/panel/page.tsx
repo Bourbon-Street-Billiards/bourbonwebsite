@@ -3,9 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
+import EditorCard from '@/components/editor/card/EditorCard';
 import Skeleton from '@/components/ui/Skeleton';
-import styles from './page.module.css';
+import styles from './page.module.scss';
 import { AppData, Event, MenuCategory, LeagueTeam, BilliardRate } from '@/lib/data';
+import EditorLoading from '@/components/editor/EditorLoading';
 
 export default function AdminDashboard() {
     const [data, setData] = useState<AppData | null>(null);
@@ -255,7 +257,7 @@ const EventsEditor = ({ events, onChange, saving, loading }: { events: Event[]; 
 
     return (
         <div className={styles.editorContent}>
-            <Button disabled={loading || saving} onClick={openAddEvent} variant="outline" className={styles.addButton}>+ Add New Event</Button>
+            <Button disabled={loading || saving} onClick={openAddEvent} variant="outline" className={styles.addButton}>Add Event</Button>
 
             {eventModal.isOpen && (
                 <div className={styles.modalOverlay}>
@@ -300,19 +302,7 @@ const EventsEditor = ({ events, onChange, saving, loading }: { events: Event[]; 
 
             <div className={styles.cardGrid}>
                 {events.map((event, index) => (
-                    <div key={event.id} className={styles.compactItem}>
-                        <div className={styles.compactInfo}>
-                            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
-                                <span className={styles.compactName}>{event.title}</span>
-                                <span className={styles.compactPrice} style={{ fontSize: '1rem' }}>{event.date}</span>
-                            </div>
-                            <span className={styles.compactDesc}>{event.description}</span>
-                        </div>
-                        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                            <Button disabled={loading || saving} onClick={() => openEditEvent(index, event)} variant="outline" className={styles.smallButton}>Edit</Button>
-                            <Button disabled={loading || saving} onClick={() => removeEvent(index)} variant="delete" className={styles.smallButton}>Delete</Button>
-                        </div>
-                    </div>
+                    <EditorCard key={event.id} data={event} index={index} openEditEvent={openEditEvent} removeEvent={removeEvent} loading={loading} saving={saving} />
                 ))}
             </div>
         </div>
@@ -323,7 +313,6 @@ const MenuEditor = ({ menu, onChange, loading, saving }: { menu: MenuCategory[];
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [newCategoryTitle, setNewCategoryTitle] = useState('');
 
-    // Item Modal State
     const [itemModal, setItemModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -398,8 +387,8 @@ const MenuEditor = ({ menu, onChange, loading, saving }: { menu: MenuCategory[];
     };
 
     return (
-        <div>
-            <Button disabled={loading || saving} onClick={() => setIsAddingCategory(true)} variant="outline" className={styles.addButton}>+ Add Category</Button>
+        <div className={styles.editorContent}>
+            <Button disabled={loading || saving} onClick={() => setIsAddingCategory(true)} variant="outline" className={styles.addButton}>Add Category</Button>
 
             {/* Category Modal */}
             {isAddingCategory && (
@@ -472,7 +461,7 @@ const MenuEditor = ({ menu, onChange, loading, saving }: { menu: MenuCategory[];
                             {category.title}
                         </h3>
                         <div style={{ display: 'flex', gap: '1rem' }}>
-                            <Button disabled={loading || saving} onClick={() => openAddItem(catIndex)} variant="outline" className={styles.smallButton}>+ Add Item</Button>
+                            <Button disabled={loading || saving} onClick={() => openAddItem(catIndex)} variant="outline" className={styles.smallButton}>Add Item</Button>
                             <Button disabled={loading || saving} onClick={() => deleteCategory(catIndex)} variant="delete" className={styles.smallButton}>Delete Category</Button>
                         </div>
                     </div>
@@ -572,7 +561,7 @@ const LeagueEditor = ({ league, onChange }: { league: LeagueTeam[]; onChange: (l
 
     return (
         <div>
-            <Button onClick={openAddTeam} variant="outline" className={styles.addButton}>+ Add Team</Button>
+            <Button onClick={openAddTeam} variant="outline" className={styles.addButton}>Add Team</Button>
 
             {teamModal.isOpen && (
                 <div className={styles.modalOverlay}>
@@ -746,7 +735,7 @@ const RatesEditor = ({ rates, onChange }: { rates: BilliardRate[]; onChange: (ra
 
     return (
         <div>
-            <Button onClick={openAddRate} variant="outline" className={styles.addButton}>+ Add Rate</Button>
+            <Button onClick={openAddRate} variant="outline" className={styles.addButton}>Add Rate</Button>
 
             {rateModal.isOpen && (
                 <div className={styles.modalOverlay}>
@@ -804,22 +793,6 @@ const RatesEditor = ({ rates, onChange }: { rates: BilliardRate[]; onChange: (ra
                         </div>
                     </div>
                 ))}
-            </div>
-        </div>
-    );
-}
-
-const EditorLoading = () => {
-    return (
-        <div className={styles.section}>
-            <div className={styles.editorContent}>
-                <Skeleton width="100%" height={54} />
-                <div className={styles.cardGrid}>
-                    <Skeleton width="100%" height={147} />
-                    <Skeleton width="100%" height={147} />
-                    <Skeleton width="100%" height={147} />
-                    <Skeleton width="100%" height={147} />
-                </div>
             </div>
         </div>
     );
