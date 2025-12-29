@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth/client';
 import Button from '@/components/ui/Button';
 import EditorCard from '@/components/editor/card/EditorCard';
 import Skeleton from '@/components/ui/Skeleton';
@@ -17,6 +18,7 @@ export default function AdminDashboard() {
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
+    const { data: session, isPending } = authClient.useSession();
 
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -33,15 +35,22 @@ export default function AdminDashboard() {
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        // Check auth
-        const auth = document.cookie.includes('admin_auth=true');
-        if (!auth) {
-            router.push('/panel/login');
+        // Check auth - redirect if not authenticated
+        if (!isPending && !session) {
+            router.push('/auth/sign-in');
             return;
         }
 
-        fetchData();
-    }, [router]);
+        // Check if user is admin - redirect non-admins to user dashboard
+        if (session && session.user?.role !== 'admin') {
+            router.push('/dashboard');
+            return;
+        }
+
+        if (session && session.user?.role === 'admin') {
+            fetchData();
+        }
+    }, [router, session, isPending]);
 
     const fetchData = async () => {
         try {
@@ -91,8 +100,8 @@ export default function AdminDashboard() {
 
     const handleLogout = async () => {
         try {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            router.push('/panel/login');
+            await authClient.signOut();
+            router.push('/auth/sign-in');
             router.refresh();
         } catch (error) {
             console.error('Logout failed', error);
