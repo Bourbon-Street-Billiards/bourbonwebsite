@@ -117,6 +117,21 @@ export default function AdminDashboard() {
         setIsMobileMenuOpen(false); // Close menu on selection
     };
 
+    // Don't render anything while checking auth
+    if (isPending) {
+        return null;
+    }
+
+    // Don't render if not authenticated
+    if (!session) {
+        return null;
+    }
+
+    // Don't render if not admin
+    if (session.user?.role !== 'admin') {
+        return null;
+    }
+
     return (
         <div className={styles.container}>
             {/* Mobile Header */}

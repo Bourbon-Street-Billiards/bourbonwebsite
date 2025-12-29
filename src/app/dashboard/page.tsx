@@ -30,7 +30,7 @@ export default function UserDashboard() {
     }
 
     return (
-        <main className={styles.main}>
+        <main className={styles.container}>
             <div className={styles.card}>
                 <h1 className={styles.title}>User Dashboard</h1>
                 <div className={styles.userInfo}>
