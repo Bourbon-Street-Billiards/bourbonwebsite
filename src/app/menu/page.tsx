@@ -4,21 +4,22 @@ import { getData } from '@/lib/data';
 export default async function MenuPage() {
     const { menu } = await getData();
     return (
-        <main className={styles.main}>
-            <h1 className={styles.title}>Food & Drink</h1>
-            <div className={styles.menuContainer}>
+
+        <main className={styles['menu']}>
+            <h1 className={styles['menu__title']}>Food & Drink</h1>
+            <div className={styles['menu__container']}>
                 {menu.map((category, index) => (
-                    <section key={index} className={styles.category}>
-                        <h2 className={styles.categoryTitle}>{category.title}</h2>
-                        <div className={styles.items}>
+                    <section key={index} className={styles['menu__category']}>
+                        <h2 className={styles['menu__category-title']}>{category.title}</h2>
+                        <div className={styles['menu__items']}>
                             {category.items.map((item, idx) => (
-                                <div key={idx} className={styles.item}>
-                                    <div className={styles.itemHeader}>
-                                        <h3 className={styles.itemName}>{item.name}</h3>
-                                        <span className={styles.spacer}></span>
-                                        <span className={styles.itemPrice}>$ {item.price}</span>
+                                <div key={idx} className={styles['menu__item']}>
+                                    <div className={styles['menu__item-header']}>
+                                        <h3 className={styles['menu__item-name']}>{item.name}</h3>
+                                        <span className={styles['menu__item-spacer']}></span>
+                                        <span className={styles['menu__item-price']}>$ {item.price}</span>
                                     </div>
-                                    <p className={styles.itemDescription}>{item.description}</p>
+                                    <p className={styles['menu__item-desc']}>{item.description}</p>
                                 </div>
                             ))}
                         </div>

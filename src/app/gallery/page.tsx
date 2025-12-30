@@ -17,11 +17,11 @@ const images = [
 
 export default function GalleryPage() {
     return (
-        <main className={styles.main}>
-            <h1 className={styles.title}>Gallery</h1>
-            <div className={styles.grid}>
+        <main className={styles['gallery']}>
+            <h1 className={styles['gallery__title']}>Gallery</h1>
+            <div className={styles['gallery__grid']}>
                 {images.map((img) => (
-                    <div key={img.id} className={styles.imageWrapper}>
+                    <div key={img.id} className={styles['gallery__card']}>
                         <GalleryImage src={img.src} alt={img.alt} />
                     </div>
                 ))}

@@ -197,33 +197,33 @@ export default function AdminDashboard() {
     if (session.user?.role !== 'admin') return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.mobileHeader}>
-                <h2 className={styles.sidebarTitle}>Bourbon Admin</h2>
-                <button className={styles.menuButton} onClick={toggleMobileMenu}>
+        <div className={styles['panel']}>
+            <div className={styles['mobile-header']}>
+                <h2 className={styles['panel__sidebar-title']}>Bourbon Admin</h2>
+                <button className={styles['mobile-header__button']} onClick={toggleMobileMenu}>
                     {isMobileMenuOpen ? '✕' : '☰'}
                 </button>
             </div>
 
-            <aside className={`${styles.sidebar} ${isScrolled ? styles.scrolled : ''} ${isMobileMenuOpen ? styles.open : ''}`}>
-                <div className={styles.sidebarHeader}>
-                    <h2 className={styles.sidebarTitle}>Bourbon Admin</h2>
+            <aside className={`${styles['panel__sidebar']} ${isScrolled ? styles['panel__sidebar--scrolled'] : ''} ${isMobileMenuOpen ? styles['panel__sidebar--open'] : ''}`}>
+                <div className={styles['panel__sidebar-header']}>
+                    <h2 className={styles['panel__sidebar-title']}>Bourbon Admin</h2>
                 </div>
-                <nav className={styles.nav}>
-                    <button className={`${styles.navItem} ${activeTab === 'events' ? styles.active : ''}`} onClick={() => handleTabChange('events')}>Events</button>
-                    <button className={`${styles.navItem} ${activeTab === 'menu' ? styles.active : ''}`} onClick={() => handleTabChange('menu')}>Menu</button>
-                    <button className={`${styles.navItem} ${activeTab === 'league' ? styles.active : ''}`} onClick={() => handleTabChange('league')}>League</button>
-                    <button className={`${styles.navItem} ${activeTab === 'rates' ? styles.active : ''}`} onClick={() => handleTabChange('rates')}>Rates</button>
-                    <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
+                <nav className={styles['panel__nav']}>
+                    <button className={`${styles['panel__nav-item']} ${activeTab === 'events' ? styles['panel__nav-item--active'] : ''}`} onClick={() => handleTabChange('events')}>Events</button>
+                    <button className={`${styles['panel__nav-item']} ${activeTab === 'menu' ? styles['panel__nav-item--active'] : ''}`} onClick={() => handleTabChange('menu')}>Menu</button>
+                    <button className={`${styles['panel__nav-item']} ${activeTab === 'league' ? styles['panel__nav-item--active'] : ''}`} onClick={() => handleTabChange('league')}>League</button>
+                    <button className={`${styles['panel__nav-item']} ${activeTab === 'rates' ? styles['panel__nav-item--active'] : ''}`} onClick={() => handleTabChange('rates')}>Rates</button>
+                    <button onClick={handleLogout} className={styles['panel__nav-logout']}>Logout</button>
                 </nav>
             </aside>
 
-            <main className={styles.mainContent}>
-                <div className={styles.topBar}>
-                    <h1 className={styles.pageTitle}>
+            <main className={styles['panel__content']}>
+                <div className={styles['panel__top-bar']}>
+                    <h1 className={styles['panel__page-title']}>
                         {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management
                     </h1>
-                    <div className={styles.syncStatus}>
+                    <div className={styles['panel__sync-status']}>
                         Status:
                         {isSaving ? (
                             <span style={{ color: 'var(--color-text-accent)' }}>Saving...</span>
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
                 {loading || !data ? (
                     <EditorLoading />
                 ) : (
-                    <div className={styles.section}>
+                    <div className={styles['panel__section']}>
                         {activeTab === 'events' && (
                             <EventsEditor events={data.events} onChange={handleEventsChange} loading={loading} saving={saving.events} />
                         )}

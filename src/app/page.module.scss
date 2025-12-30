@@ -1,30 +1,44 @@
+// Home Page Styles
+
 .main {
     min-height: 100vh;
+
+    @media (max-width: 768px) {
+        max-width: 1200px;
+        min-height: 80vh;
+        margin: 0 auto;
+        padding: 92px 1rem 4rem;
+    }
 }
 
+// Hero Section
 .hero {
     height: 90vh;
+    padding: 0 1rem;
+    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     background: linear-gradient(to bottom, rgba(15, 17, 16, 0.6), rgba(15, 17, 16, 0.8)), url('/assets/images/IMG_9001.jpg') no-repeat center center/cover;
     background-attachment: fixed;
-    text-align: center;
-    padding: 0 1rem;
-    position: relative;
+
+    &::after {
+        content: '';
+        width: 100%;
+        height: 150px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(to top, var(--color-background), transparent);
+    }
+
+    @media (max-width: 768px) {
+        height: 80vh;
+    }
 }
 
-.hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 150px;
-    background: linear-gradient(to top, var(--color-background), transparent);
-}
-
-.heroContent {
+.hero__content {
     max-width: 900px;
     position: relative;
     z-index: 1;
@@ -43,153 +57,142 @@
     }
 }
 
-.title {
-    font-size: 5.5rem;
+.hero__title {
     margin-bottom: 2rem;
-    color: var(--color-accent);
-    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    font-size: 5.5rem;
+    font-weight: 400;
     letter-spacing: -2px;
     line-height: 1;
-    font-weight: 400;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: var(--color-accent);
+
+    @media (max-width: 768px) {
+        font-size: 3rem;
+    }
 }
 
-.subtitle {
-    font-size: 1.6rem;
+.hero__subtitle {
     margin-bottom: 4rem;
-    color: var(--color-text);
+    font-family: var(--font-subheading);
+    font-size: 1.6rem;
     font-weight: 400;
     letter-spacing: 3px;
     text-transform: uppercase;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-    font-family: var(--font-subheading);
+    color: var(--color-text);
+
+    @media (max-width: 768px) {
+        font-size: 1.2rem;
+    }
 }
 
-.ctaGroup {
+.hero__cta-group {
     display: flex;
-    gap: 2rem;
     justify-content: center;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }
 
-.heroButton {
+.hero__button {
     min-width: 234px;
     backdrop-filter: blur(10px);
 }
 
+// Features Section
 .features {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 8rem 2rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(496px, 1fr));
     gap: 4rem;
-    padding: 8rem 2rem;
     background-color: var(--color-background);
-    max-width: 1400px;
-    margin: 0 auto;
+
+    @media (max-width: 768px) {
+        padding: 4rem 1rem;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
 }
 
-.featureCard {
+.features__card {
     padding: 4rem 2rem;
-    background: var(--color-surface);
-    border: 1px solid rgba(196, 184, 150, 0.05);
     text-align: center;
-    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    border-radius: 0;
     position: relative;
+    border: 1px solid rgba(196, 184, 150, 0.05);
+    border-radius: 0;
+    background: var(--color-surface);
     overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &::before {
+        content: '';
+        width: 100%;
+        height: 1px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: var(--color-accent);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.6s ease;
+    }
+
+    &:hover {
+        background: var(--color-surface-hover);
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-10px);
+
+        &::before {
+            transform: scaleX(1);
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 2rem 1.5rem;
+    }
 }
 
-.featureCard::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: var(--color-accent);
-    transform: scaleX(0);
-    transition: transform 0.6s ease;
-    transform-origin: center;
-}
-
-.featureCard:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-lg);
-    background: var(--color-surface-hover);
-}
-
-.featureCard:hover::before {
-    transform: scaleX(1);
-}
-
-.featureTitle {
-    font-size: 2rem;
+.features__card-title {
     margin-bottom: 1.5rem;
-    color: #fff;
     font-family: var(--font-heading);
+    font-size: 2rem;
     letter-spacing: 1px;
+    color: #fff;
 }
 
-.featureText {
-    color: var(--color-text-muted);
-    line-height: 1.8;
-    font-size: 1.2rem;
+.features__card-text {
     font-family: var(--font-subheading);
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--color-text-muted);
 }
 
+// About Section
 .about {
     padding: 4rem 2rem;
     text-align: center;
     background-color: var(--color-background);
 }
 
-.aboutContent {
+.about__content {
     max-width: 800px;
     margin: 0 auto;
 }
 
-.sectionTitle {
-    font-size: 2.5rem;
+.about__title {
     margin-bottom: 2rem;
+    font-size: 2.5rem;
     color: var(--color-accent);
 }
 
-.aboutText {
+.about__text {
+    margin-bottom: 2rem;
     font-size: 1.1rem;
     line-height: 1.8;
-    margin-bottom: 2rem;
     color: var(--color-text);
-}
-
-@media (max-width: 768px) {
-    .hero {
-        height: 80vh;
-    }
-
-    .title {
-        font-size: 3rem;
-    }
-
-    .subtitle {
-        font-size: 1.2rem;
-    }
-
-    .ctaGroup {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .main {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 92px 1rem 4rem;
-        min-height: 80vh;
-    }
-
-    .features {
-        padding: 4rem 1rem;
-        gap: 2rem;
-        grid-template-columns: 1fr;
-    }
-
-    .featureCard {
-        padding: 2rem 1.5rem;
-    }
 }

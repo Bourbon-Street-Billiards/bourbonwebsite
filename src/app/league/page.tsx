@@ -4,10 +4,11 @@ import { getData } from '@/lib/data';
 export default async function LeaguePage() {
     const { league } = await getData();
     return (
-        <main className={styles.main}>
-            <h1 className={styles.title}>League Standings</h1>
-            <div className={styles.tableWrapper}>
-                <table className={styles.table}>
+
+        <main className={styles['league']}>
+            <h1 className={styles['league__title']}>League Standings</h1>
+            <div className={styles['league__table-wrapper']}>
+                <table className={styles['league__table']}>
                     <thead>
                         <tr>
                             <th>Rank</th>
@@ -21,12 +22,12 @@ export default async function LeaguePage() {
                     <tbody>
                         {league.map((team) => (
                             <tr key={team.rank}>
-                                <td className={styles.rank}>{team.rank}</td>
-                                <td className={styles.team}>{team.team}</td>
+                                <td className={styles['league__rank']}>{team.rank}</td>
+                                <td className={styles['league__team']}>{team.team}</td>
                                 <td>{team.played}</td>
                                 <td>{team.won}</td>
                                 <td>{team.lost}</td>
-                                <td className={styles.points}>{team.points}</td>
+                                <td className={styles['league__points']}>{team.points}</td>
                             </tr>
                         ))}
                     </tbody>

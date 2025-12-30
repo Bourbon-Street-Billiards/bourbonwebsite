@@ -23,33 +23,33 @@ export default function Header() {
     };
 
     return (
-        <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
-            <div className={styles.container}>
-                <Link href="/" className={styles.logo} onClick={() => setIsMenuOpen(false)}>
+        <header className={`${styles['header']} ${isScrolled ? styles['header--scrolled'] : ''}`}>
+            <div className={styles['header__container']}>
+                <Link href="/" className={styles['header__logo']} onClick={() => setIsMenuOpen(false)}>
                     <img
                         src="/assets/logo.png"
                         alt="Bourbon Street Billiards"
                         width={120}
                         height={32}
-                        className={styles.logoImage}
+                        className={styles['header__logo-image']}
                     />
                 </Link>
 
-                <button className={`${styles.hamburger} ${isMenuOpen ? styles.active : ''}`} onClick={toggleMenu}>
-                    <span className={styles.bar}></span>
-                    <span className={styles.bar}></span>
-                    <span className={styles.bar}></span>
+                <button className={`${styles['header__hamburger']} ${isMenuOpen ? styles['header__hamburger--active'] : ''}`} onClick={toggleMenu}>
+                    <span className={styles['header__hamburger-bar']}></span>
+                    <span className={styles['header__hamburger-bar']}></span>
+                    <span className={styles['header__hamburger-bar']}></span>
                 </button>
 
-                <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
-                    <div className={styles.navLinks}>
-                        <Link href="/" className={styles.link} onClick={() => setIsMenuOpen(false)}>Home</Link>
-                        <Link href="/events" className={styles.link} onClick={() => setIsMenuOpen(false)}>Events</Link>
-                        <Link href="/gallery" className={styles.link} onClick={() => setIsMenuOpen(false)}>Gallery</Link>
-                        <Link href="/menu" className={styles.link} onClick={() => setIsMenuOpen(false)}>Menu</Link>
-                        <Link href="/league" className={styles.link} onClick={() => setIsMenuOpen(false)}>League</Link>
+                <nav className={`${styles['header__nav']} ${isMenuOpen ? styles['header__nav--open'] : ''}`}>
+                    <div className={styles['header__nav-links']}>
+                        <Link href="/" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>Home</Link>
+                        <Link href="/events" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>Events</Link>
+                        <Link href="/gallery" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>Gallery</Link>
+                        <Link href="/menu" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>Menu</Link>
+                        <Link href="/league" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>League</Link>
                     </div>
-                    <Link href="/contact" className={styles.bookButton} onClick={() => setIsMenuOpen(false)}>Book Now</Link>
+                    <Link href="/contact" className={styles['header__book-button']} onClick={() => setIsMenuOpen(false)}>Book Now</Link>
                 </nav>
             </div>
         </header>

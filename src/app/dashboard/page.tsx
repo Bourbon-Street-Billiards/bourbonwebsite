@@ -17,8 +17,8 @@ export default function UserDashboard() {
 
     if (isPending) {
         return (
-            <main className={styles.container}>
-                <div className={styles.card}>
+            <main className={styles['dashboard']}>
+                <div className={styles['dashboard__card']}>
                     <p>Loading...</p>
                 </div>
             </main>
@@ -30,18 +30,18 @@ export default function UserDashboard() {
     }
 
     return (
-        <main className={styles.container}>
-            <div className={styles.card}>
-                <h1 className={styles.title}>User Dashboard</h1>
-                <div className={styles.userInfo}>
+        <main className={styles['dashboard']}>
+            <div className={styles['dashboard__card']}>
+                <h1 className={styles['dashboard__title']}>User Dashboard</h1>
+                <div className={styles['dashboard__user-info']}>
                     <p><strong>Welcome,</strong> {session.user?.name || 'User'}</p>
                     <p><strong>Email:</strong> {session.user?.email}</p>
                     <p><strong>Role:</strong> {session.user?.role || 'user'}</p>
                 </div>
-                <div className={styles.actions}>
+                <div className={styles['dashboard__actions']}>
                     <button
                         onClick={() => authClient.signOut()}
-                        className={styles.button}
+                        className={styles['dashboard__button']}
                     >
                         Sign Out
                     </button>

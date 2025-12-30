@@ -1,99 +1,110 @@
-.title {
-    font-size: 3rem;
-    margin-bottom: 4rem;
-    text-align: center;
-    color: var(--color-accent);
+// Contact Page Styles
+// Block: contact
+
+.contact {
+    width: 100%;
+    min-height: 100vh;
+    padding: calc(var(--header-height) + 4rem) 2rem 4rem;
 }
 
-.container {
+.contact__title {
+    margin-bottom: 4rem;
+    font-size: 3rem;
+    text-align: center;
+    color: var(--color-accent);
+
+    @media (max-width: 768px) {
+        font-size: 2.5rem;
+    }
+}
+
+.contact__container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
 }
 
-.infoSection {
+.contact__info {
     display: flex;
     flex-direction: column;
     gap: 3rem;
 }
 
-.infoTitle {
-    font-size: 1.5rem;
+.contact__info-block {
+    // Structural block for info items
+}
+
+.contact__info-title {
     margin-bottom: 1rem;
+    font-size: 1.5rem;
     color: var(--color-accent);
 }
 
-.infoText {
-    color: var(--color-text);
-    font-size: 1.1rem;
+.contact__info-text {
     margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--color-text);
 }
 
-.ratesSection {
-    background-color: var(--color-surface);
+.contact__rates {
     padding: 3rem;
-    border-radius: 2px;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    background-color: var(--color-surface);
     box-shadow: var(--shadow-lg);
+
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+    }
 }
 
-.ratesTitle {
-    font-size: 2rem;
+.contact__rates-title {
     margin-bottom: 2rem;
-    color: var(--color-accent);
     font-family: var(--font-heading);
+    font-size: 2rem;
     text-align: center;
+    color: var(--color-accent);
 }
 
-.ratesGrid {
+.contact__rates-grid {
     display: grid;
     gap: 2rem;
 }
 
-.rateCard {
+.contact__rate-card {
     padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.2);
+    text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2px;
-    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+
+    &:hover {
+        border-color: var(--color-accent);
+        transform: translateY(-2px);
+    }
 }
 
-.rateCard:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-2px);
-}
-
-.rateName {
-    font-size: 1.3rem;
-    color: #fff;
+.contact__rate-name {
     margin-bottom: 0.5rem;
     font-family: var(--font-subheading);
+    font-size: 1.3rem;
+    color: #fff;
 }
 
-.ratePrice {
-    font-size: 1.5rem;
-    color: var(--color-accent);
-    font-weight: 600;
+.contact__rate-price {
     margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-accent);
 }
 
-.rateDesc {
-    color: var(--color-text-muted);
+.contact__rate-desc {
     font-size: 0.95rem;
-}
-
-@media (max-width: 768px) {
-    .title {
-        font-size: 2.5rem;
-    }
-
-    .container {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-    }
-
-    .ratesSection {
-        padding: 1.5rem;
-    }
+    color: var(--color-text-muted);
 }

@@ -1,68 +1,74 @@
+// Global Styles & CSS Variables
+
 :root {
+  // Color Palette
   --color-primary: #1c261c;
-  /* Deep Forest Green */
   --color-primary-dark: #121812;
   --color-accent: #c4b896;
-  /* Antique Champagne Gold */
   --color-accent-glow: rgba(196, 184, 150, 0.2);
   --color-background: #0a0c0a;
-  /* Obsidian Green */
   --color-surface: #141814;
-  /* Dark Matte Surface */
   --color-surface-hover: #1a1e1a;
   --color-text: #e6e4dc;
-  /* Cream/Off-white */
   --color-text-muted: #9a988e;
-  /* Warm Grey */
 
+  // Typography
   --font-heading: 'Playfair Display', serif;
   --font-subheading: 'Cormorant Garamond', serif;
   --font-body: 'Crimson Text', serif;
 
+  // Shadows
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 20px var(--color-accent-glow);
+  --shadow-glow: 0 0px 20px var(--color-accent-glow);
 
+  // Glass Effects
   --glass-bg: rgba(20, 24, 20, 0.85);
   --glass-border: 1px solid rgba(196, 184, 150, 0.1);
   --glass-backdrop: blur(12px);
 
+  // Layout
   --header-height: 92px;
 }
 
+// Reset
 * {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Base Styles
+html,
+body {
+  max-width: 100vw;
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 main {
   padding: var(--header-height) 1rem 3rem;
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  background-color: var(--color-background);
-  color: var(--color-text);
-  font-family: var(--font-body);
-  scroll-behavior: smooth;
-  letter-spacing: 0.02em;
-  line-height: 1.6;
-}
-
+// Selection
 ::selection {
-  background-color: var(--color-accent);
   color: #000;
+  background-color: var(--color-accent);
 }
 
+// Links
 a {
-  color: inherit;
   text-decoration: none;
+  color: inherit;
 }
 
+// Headings
 h1,
 h2,
 h3,

@@ -4,17 +4,18 @@ import { getData } from '@/lib/data';
 export default async function EventsPage() {
     const { events } = await getData();
     return (
-        <main className={styles.main}>
-            <h1 className={styles.title}>Upcoming Events</h1>
-            <div className={styles.eventsList}>
+
+        <main className={styles['events']}>
+            <h1 className={styles['events__title']}>Upcoming Events</h1>
+            <div className={styles['events__list']}>
                 {events?.length ? events.map((event) => (
-                    <div key={event.id} className={styles.eventCard}>
-                        <div className={styles.dateBox}>
-                            <span className={styles.dateText}>{event.date}</span>
+                    <div key={event.id} className={styles['events__card']}>
+                        <div className={styles['events__card-date-box']}>
+                            <span className={styles['events__card-date-text']}>{event.date}</span>
                         </div>
-                        <div className={styles.content}>
-                            <h2 className={styles.eventTitle}>{event.title}</h2>
-                            <p className={styles.description}>{event.description}</p>
+                        <div className={styles['events__card-content']}>
+                            <h2 className={styles['events__card-title']}>{event.title}</h2>
+                            <p className={styles['events__card-desc']}>{event.description}</p>
                         </div>
                     </div>
                 )) : <p>No events found</p>}

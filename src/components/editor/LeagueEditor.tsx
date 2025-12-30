@@ -65,27 +65,28 @@ export default function LeagueEditor({ league, onChange }: LeagueEditorProps) {
         }
     };
 
+
     return (
         <div>
-            <Button onClick={openAddTeam} variant="outline" className={styles.addButton}>Add Team</Button>
+            <Button onClick={openAddTeam} variant="outline" className={styles['add-button']}>Add Team</Button>
 
             {teamModal.isOpen && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modal}>
-                        <h3 className={styles.modalTitle}>{teamModal.mode === 'add' ? 'Add Team' : 'Edit Team'}</h3>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Rank</label>
+                <div className={styles['modal-overlay']}>
+                    <div className={styles['modal']}>
+                        <h3 className={styles['modal__title']}>{teamModal.mode === 'add' ? 'Add Team' : 'Edit Team'}</h3>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Rank</label>
                             <input
                                 type="number"
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={teamModal.data.rank}
                                 onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, rank: parseInt(e.target.value) || 0 } })}
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Team Name</label>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Team Name</label>
                             <input
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={teamModal.data.team}
                                 onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, team: e.target.value } })}
                                 placeholder="Team Name"
@@ -93,44 +94,44 @@ export default function LeagueEditor({ league, onChange }: LeagueEditorProps) {
                             />
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Points</label>
+                            <div className={styles['form-group']}>
+                                <label className={styles['form-group__label']}>Points</label>
                                 <input
                                     type="number"
-                                    className={styles.input}
+                                    className={styles['form-group__input']}
                                     value={teamModal.data.points}
                                     onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, points: parseInt(e.target.value) || 0 } })}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Played</label>
+                            <div className={styles['form-group']}>
+                                <label className={styles['form-group__label']}>Played</label>
                                 <input
                                     type="number"
-                                    className={styles.input}
+                                    className={styles['form-group__input']}
                                     value={teamModal.data.played}
                                     onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, played: parseInt(e.target.value) || 0 } })}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Won</label>
+                            <div className={styles['form-group']}>
+                                <label className={styles['form-group__label']}>Won</label>
                                 <input
                                     type="number"
-                                    className={styles.input}
+                                    className={styles['form-group__input']}
                                     value={teamModal.data.won}
                                     onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, won: parseInt(e.target.value) || 0 } })}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Lost</label>
+                            <div className={styles['form-group']}>
+                                <label className={styles['form-group__label']}>Lost</label>
                                 <input
                                     type="number"
-                                    className={styles.input}
+                                    className={styles['form-group__input']}
                                     value={teamModal.data.lost}
                                     onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, lost: parseInt(e.target.value) || 0 } })}
                                 />
                             </div>
                         </div>
-                        <div className={styles.modalActions}>
+                        <div className={styles['modal__actions']}>
                             <Button onClick={closeTeamModal} variant="outline">Cancel</Button>
                             <Button onClick={saveTeam}>{teamModal.mode === 'add' ? 'Add' : 'Save'}</Button>
                         </div>
@@ -138,29 +139,29 @@ export default function LeagueEditor({ league, onChange }: LeagueEditorProps) {
                 </div>
             )}
 
-            <div className={styles.tableContainer}>
-                <table className={styles.table}>
+            <div className={styles['data-table-container']}>
+                <table className={styles['data-table']}>
                     <thead>
                         <tr>
-                            <th className={styles.th} style={{ width: '60px' }}>Rank</th>
-                            <th className={styles.th}>Team Name</th>
-                            <th className={styles.th} style={{ width: '80px' }}>Pts</th>
-                            <th className={styles.th} style={{ width: '80px' }}>P</th>
-                            <th className={styles.th} style={{ width: '80px' }}>W</th>
-                            <th className={styles.th} style={{ width: '80px' }}>L</th>
-                            <th className={styles.th} style={{ width: '120px' }}>Actions</th>
+                            <th className={styles['data-table__th']} style={{ width: '60px' }}>Rank</th>
+                            <th className={styles['data-table__th']}>Team Name</th>
+                            <th className={styles['data-table__th']} style={{ width: '80px' }}>Pts</th>
+                            <th className={styles['data-table__th']} style={{ width: '80px' }}>P</th>
+                            <th className={styles['data-table__th']} style={{ width: '80px' }}>W</th>
+                            <th className={styles['data-table__th']} style={{ width: '80px' }}>L</th>
+                            <th className={styles['data-table__th']} style={{ width: '120px' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {league.map((team, index) => (
-                            <tr key={index} className={styles.tr}>
-                                <td className={styles.td}>{team.rank}</td>
-                                <td className={styles.td}>{team.team}</td>
-                                <td className={styles.td}>{team.points}</td>
-                                <td className={styles.td}>{team.played}</td>
-                                <td className={styles.td}>{team.won}</td>
-                                <td className={styles.td}>{team.lost}</td>
-                                <td className={styles.td}>
+                            <tr key={index} className={styles['data-table__tr']}>
+                                <td className={styles['data-table__td']}>{team.rank}</td>
+                                <td className={styles['data-table__td']}>{team.team}</td>
+                                <td className={styles['data-table__td']}>{team.points}</td>
+                                <td className={styles['data-table__td']}>{team.played}</td>
+                                <td className={styles['data-table__td']}>{team.won}</td>
+                                <td className={styles['data-table__td']}>{team.lost}</td>
+                                <td className={styles['data-table__td']}>
                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                                         <button
                                             onClick={() => openEditTeam(index, team)}

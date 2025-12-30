@@ -90,24 +90,24 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
     };
 
     return (
-        <div className={styles.editorContent}>
-            <Button disabled={loading || saving} onClick={() => setIsAddingCategory(true)} variant="outline" className={styles.addButton}>Add Category</Button>
+        <div className={styles['editor-content']}>
+            <Button disabled={loading || saving} onClick={() => setIsAddingCategory(true)} variant="outline" className={styles['add-button']}>Add Category</Button>
 
             {isAddingCategory && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modal}>
-                        <h3 className={styles.modalTitle}>New Category</h3>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Category Title</label>
+                <div className={styles['modal-overlay']}>
+                    <div className={styles['modal']}>
+                        <h3 className={styles['modal__title']}>New Category</h3>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Category Title</label>
                             <input
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={newCategoryTitle}
                                 onChange={(e) => setNewCategoryTitle(e.target.value)}
                                 placeholder="e.g., Starters"
                                 autoFocus
                             />
                         </div>
-                        <div className={styles.modalActions}>
+                        <div className={styles['modal__actions']}>
                             <Button disabled={loading || saving} onClick={() => setIsAddingCategory(false)} variant="outline">Cancel</Button>
                             <Button disabled={loading || saving} onClick={addCategory}>Create</Button>
                         </div>
@@ -116,38 +116,38 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
             )}
 
             {itemModal.isOpen && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modal}>
-                        <h3 className={styles.modalTitle}>{itemModal.mode === 'add' ? 'Add Item' : 'Edit Item'}</h3>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Name</label>
+                <div className={styles['modal-overlay']}>
+                    <div className={styles['modal']}>
+                        <h3 className={styles['modal__title']}>{itemModal.mode === 'add' ? 'Add Item' : 'Edit Item'}</h3>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Name</label>
                             <input
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={itemModal.data.name}
                                 onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, name: e.target.value } })}
                                 placeholder="Item Name"
                                 autoFocus
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Price</label>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Price</label>
                             <input
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={itemModal.data.price}
                                 onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, price: e.target.value } })}
                                 placeholder="$0.00"
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Description</label>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Description</label>
                             <textarea
-                                className={styles.textarea}
+                                className={styles['form-group__textarea']}
                                 value={itemModal.data.description}
                                 onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, description: e.target.value } })}
                                 placeholder="Description..."
                             />
                         </div>
-                        <div className={styles.modalActions}>
+                        <div className={styles['modal__actions']}>
                             <Button disabled={loading || saving} onClick={closeItemModal} variant="outline">Cancel</Button>
                             <Button disabled={loading || saving} onClick={saveItem}>{itemModal.mode === 'add' ? 'Add' : 'Save'}</Button>
                         </div>
@@ -156,32 +156,32 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
             )}
 
             {menu.map((category, catIndex) => (
-                <div key={catIndex} className={styles.categoryBlock}>
-                    <div className={styles.categoryHeader} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div key={catIndex} className={styles['category-block']}>
+                    <div className={styles['category-block__header']} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                         <h3 style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-heading)', margin: 0 }}>
                             {category.title}
                         </h3>
                         <div style={{ display: 'flex', gap: '1rem' }}>
-                            <Button disabled={loading || saving} onClick={() => openAddItem(catIndex)} variant="outline" className={styles.smallButton}>Add Item</Button>
-                            <Button disabled={loading || saving} onClick={() => deleteCategory(catIndex)} variant="delete" className={styles.smallButton}>Delete Category</Button>
+                            <Button disabled={loading || saving} onClick={() => openAddItem(catIndex)} variant="outline" className={styles['button--small']}>Add Item</Button>
+                            <Button disabled={loading || saving} onClick={() => deleteCategory(catIndex)} variant="delete" className={styles['button--small']}>Delete Category</Button>
                         </div>
                     </div>
-                    <div className={styles.cardGrid}>
+                    <div className={styles['card-grid']}>
                         {category.items.map((item, itemIndex) => (
-                            <div key={itemIndex} className={styles.compactItem}>
-                                <div className={styles.compactInfo}>
+                            <div key={itemIndex} className={styles['compact-item']}>
+                                <div className={styles['compact-item__info']}>
                                     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
-                                        <span className={styles.compactName}>{item.name}</span>
-                                        <span className={styles.compactPrice}>${item.price}</span>
+                                        <span className={styles['compact-item__name']}>{item.name}</span>
+                                        <span className={styles['compact-item__price']}>${item.price}</span>
                                     </div>
-                                    <span className={styles.compactDesc}>{item.description}</span>
+                                    <span className={styles['compact-item__desc']}>{item.description}</span>
                                 </div>
                                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
                                     <Button
                                         disabled={loading || saving}
                                         onClick={() => openEditItem(catIndex, itemIndex, item)}
                                         variant="outline"
-                                        className={styles.smallButton}
+                                        className={styles['button--small']}
                                     >
                                         Edit
                                     </Button>
@@ -189,7 +189,7 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
                                         disabled={loading || saving}
                                         onClick={() => deleteItem(catIndex, itemIndex)}
                                         variant="delete"
-                                        className={styles.smallButton}
+                                        className={styles['button--small']}
                                     >
                                         Delete
                                     </Button>

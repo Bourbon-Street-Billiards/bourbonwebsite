@@ -15,19 +15,25 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@neondatabase/auth": "^0.1.0-beta.20",
     "@neondatabase/neon-js": "^0.1.0-beta.21",
     "@neondatabase/serverless": "^1.0.2",
     "@types/pg": "^8.15.6",
     "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.1",
     "jose": "^6.1.2",
+    "lucide-react": "^0.562.0",
     "next": "16.0.10",
     "nextjs-toploader": "^3.9.17",
     "pg": "^8.16.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "sass": "^1.94.2"
+    "react-hook-form": "^7.69.0",
+    "sass": "^1.94.2",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

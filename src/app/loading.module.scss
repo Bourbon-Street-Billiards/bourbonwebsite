@@ -1,22 +1,25 @@
-.container {
+// Loading Page Styles
+// Block: loading
+
+.loading {
+    min-height: 100vh;
     padding: var(--header-height) 1rem 4rem;
     margin: 0 auto;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
 }
 
-.content {
+.loading__content {
     width: 100%;
     max-width: 1200px;
 }
 
-.title {
+.loading__title {
     margin: 0 auto 4rem;
     display: block;
 }
 
-.grid {
+.loading__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;

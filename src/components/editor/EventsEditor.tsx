@@ -68,43 +68,43 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
     };
 
     return (
-        <div className={styles.editorContent}>
-            <Button disabled={loading || saving} onClick={openAddEvent} variant="outline" className={styles.addButton}>Add Event</Button>
+        <div className={styles['editor-content']}>
+            <Button disabled={loading || saving} onClick={openAddEvent} variant="outline" className={styles['add-button']}>Add Event</Button>
 
             {eventModal.isOpen && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modal}>
-                        <h3 className={styles.modalTitle}>{eventModal.mode === 'add' ? 'Add Event' : 'Edit Event'}</h3>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Title</label>
+                <div className={styles['modal-overlay']}>
+                    <div className={styles['modal']}>
+                        <h3 className={styles['modal__title']}>{eventModal.mode === 'add' ? 'Add Event' : 'Edit Event'}</h3>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Title</label>
                             <input
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={eventModal.data.title}
                                 onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, title: e.target.value } })}
                                 placeholder="Event Title"
                                 autoFocus
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Date</label>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Date</label>
                             <input
                                 type="date"
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={eventModal.data.date}
                                 onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, date: e.target.value } })}
                                 placeholder="e.g., Oct 12, 8PM"
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Description</label>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Description</label>
                             <textarea
-                                className={styles.textarea}
+                                className={styles['form-group__textarea']}
                                 value={eventModal.data.description}
                                 onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, description: e.target.value } })}
                                 placeholder="Event details..."
                             />
                         </div>
-                        <div className={styles.modalActions}>
+                        <div className={styles['modal__actions']}>
                             <Button onClick={closeEventModal} variant="outline">Cancel</Button>
                             <Button onClick={saveEvent}>{eventModal.mode === 'add' ? 'Add' : 'Save'}</Button>
                         </div>
@@ -112,7 +112,7 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
                 </div>
             )}
 
-            <div className={styles.cardGrid}>
+            <div className={styles['card-grid']}>
                 {events.map((event, index) => (
                     <EditorCard key={event.id} data={event} index={index} openEditEvent={openEditEvent} removeEvent={removeEvent} loading={loading} saving={saving} />
                 ))}

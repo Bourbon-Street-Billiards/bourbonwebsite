@@ -64,43 +64,44 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
         }
     };
 
+
     return (
         <div>
-            <Button onClick={openAddRate} variant="outline" className={styles.addButton}>Add Rate</Button>
+            <Button onClick={openAddRate} variant="outline" className={styles['add-button']}>Add Rate</Button>
 
             {rateModal.isOpen && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modal}>
-                        <h3 className={styles.modalTitle}>{rateModal.mode === 'add' ? 'Add Rate' : 'Edit Rate'}</h3>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Title</label>
+                <div className={styles['modal-overlay']}>
+                    <div className={styles['modal']}>
+                        <h3 className={styles['modal__title']}>{rateModal.mode === 'add' ? 'Add Rate' : 'Edit Rate'}</h3>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Title</label>
                             <input
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={rateModal.data.title}
                                 onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, title: e.target.value } })}
                                 placeholder="e.g., Hourly Rate"
                                 autoFocus
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Price</label>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Price</label>
                             <input
-                                className={styles.input}
+                                className={styles['form-group__input']}
                                 value={rateModal.data.price}
                                 onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, price: e.target.value } })}
                                 placeholder="$0.00"
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Description</label>
+                        <div className={styles['form-group']}>
+                            <label className={styles['form-group__label']}>Description</label>
                             <textarea
-                                className={styles.textarea}
+                                className={styles['form-group__textarea']}
                                 value={rateModal.data.description}
                                 onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, description: e.target.value } })}
                                 placeholder="Details..."
                             />
                         </div>
-                        <div className={styles.modalActions}>
+                        <div className={styles['modal__actions']}>
                             <Button onClick={closeRateModal} variant="outline">Cancel</Button>
                             <Button onClick={saveRate}>{rateModal.mode === 'add' ? 'Add' : 'Save'}</Button>
                         </div>
@@ -108,19 +109,19 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
                 </div>
             )}
 
-            <div className={styles.cardGrid}>
+            <div className={styles['card-grid']}>
                 {rates.map((rate, index) => (
-                    <div key={rate.id} className={styles.compactItem}>
-                        <div className={styles.compactInfo}>
+                    <div key={rate.id} className={styles['compact-item']}>
+                        <div className={styles['compact-item__info']}>
                             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
-                                <span className={styles.compactName}>{rate.title}</span>
-                                <span className={styles.compactPrice}>{rate.price}</span>
+                                <span className={styles['compact-item__name']}>{rate.title}</span>
+                                <span className={styles['compact-item__price']}>{rate.price}</span>
                             </div>
-                            <span className={styles.compactDesc}>{rate.description}</span>
+                            <span className={styles['compact-item__desc']}>{rate.description}</span>
                         </div>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                            <Button onClick={() => openEditRate(index, rate)} variant="outline" className={styles.smallButton}>Edit</Button>
-                            <Button onClick={() => removeRate(index)} variant="delete" className={styles.smallButton}>Delete</Button>
+                            <Button onClick={() => openEditRate(index, rate)} variant="outline" className={styles['button--small']}>Edit</Button>
+                            <Button onClick={() => removeRate(index)} variant="delete" className={styles['button--small']}>Delete</Button>
                         </div>
                     </div>
                 ))}

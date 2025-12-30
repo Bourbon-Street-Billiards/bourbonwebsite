@@ -1,59 +1,62 @@
-.container {
+// Dashboard Page Styles
+// Block: dashboard
+
+.dashboard {
+    min-height: 100vh;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    padding: 2rem;
 }
 
-.card {
-    background: var(--color-bg-card, #1a1a1a);
+.dashboard__card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    text-align: center;
     border: 1px solid var(--color-border, #333);
     border-radius: 12px;
-    padding: 2rem;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
+    background: var(--color-bg-card, #1a1a1a);
 }
 
-.title {
+.dashboard__title {
+    margin-bottom: 1.5rem;
     font-family: var(--font-heading, 'Playfair Display', serif);
     font-size: 1.75rem;
     color: var(--color-accent, #D4AF37);
-    margin-bottom: 1.5rem;
 }
 
-.userInfo {
+.dashboard__user-info {
+    margin-bottom: 1.5rem;
     text-align: left;
-    margin-bottom: 1.5rem;
+
+    p {
+        margin: 0.5rem 0;
+        color: var(--color-text, #e0e0e0);
+    }
+
+    strong {
+        color: var(--color-accent, #D4AF37);
+    }
 }
 
-.userInfo p {
-    margin: 0.5rem 0;
-    color: var(--color-text, #e0e0e0);
-}
-
-.userInfo strong {
-    color: var(--color-accent, #D4AF37);
-}
-
-.actions {
+.dashboard__actions {
     margin-top: 1rem;
 }
 
-.button {
-    background: var(--color-accent, #D4AF37);
-    color: #000;
-    border: none;
+.dashboard__button {
     padding: 0.75rem 1.5rem;
-    border-radius: 6px;
     font-family: var(--font-subheading, 'Cormorant Garamond', serif);
     font-size: 1rem;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    background: var(--color-accent, #D4AF37);
     cursor: pointer;
     transition: opacity 0.2s;
-}
 
-.button:hover {
-    opacity: 0.9;
+    &:hover {
+        opacity: 0.9;
+    }
 }
