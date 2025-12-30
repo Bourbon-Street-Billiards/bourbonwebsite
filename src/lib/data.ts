@@ -191,3 +191,92 @@ export async function saveData(data: AppData) {
         client.release();
     }
 }
+
+// Individual save functions for granular updates
+export async function saveEvents(events: Event[]) {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        await client.query('TRUNCATE events RESTART IDENTITY CASCADE');
+        for (const event of events) {
+            await client.query(
+                'INSERT INTO events (id, title, date, description) VALUES ($1, $2, $3, $4)',
+                [event.id, event.title, event.date, event.description]
+            );
+        }
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+export async function saveMenu(menu: MenuCategory[]) {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        await client.query('TRUNCATE menu_categories, menu_items RESTART IDENTITY CASCADE');
+        for (const category of menu) {
+            const catRes = await client.query(
+                'INSERT INTO menu_categories (title) VALUES ($1) RETURNING id',
+                [category.title]
+            );
+            const catId = catRes.rows[0].id;
+            for (const item of category.items) {
+                await client.query(
+                    'INSERT INTO menu_items (category_id, name, price, description) VALUES ($1, $2, $3, $4)',
+                    [catId, item.name, item.price, item.description]
+                );
+            }
+        }
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+export async function saveLeague(league: LeagueTeam[]) {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        await client.query('TRUNCATE league_teams RESTART IDENTITY CASCADE');
+        for (const team of league) {
+            await client.query(
+                'INSERT INTO league_teams (rank, team, played, won, lost, points) VALUES ($1, $2, $3, $4, $5, $6)',
+                [team.rank, team.team, team.played, team.won, team.lost, team.points]
+            );
+        }
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+export async function saveRates(rates: BilliardRate[]) {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        await client.query('TRUNCATE billiard_rates RESTART IDENTITY CASCADE');
+        for (const rate of rates) {
+            await client.query(
+                'INSERT INTO billiard_rates (id, title, price, description) VALUES ($1, $2, $3, $4)',
+                [rate.id, rate.title, rate.price, rate.description]
+            );
+        }
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
