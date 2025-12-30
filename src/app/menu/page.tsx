@@ -17,7 +17,7 @@ export default async function MenuPage() {
                                     <div className={styles['menu__item-header']}>
                                         <h3 className={styles['menu__item-name']}>{item.name}</h3>
                                         <span className={styles['menu__item-spacer']}></span>
-                                        <span className={styles['menu__item-price']}>$ {item.price}</span>
+                                        <span className={styles['menu__item-price']}>$ {item.price.length < 3 ? item.price + '.00' : item.price}</span>
                                     </div>
                                     <p className={styles['menu__item-desc']}>{item.description}</p>
                                 </div>
