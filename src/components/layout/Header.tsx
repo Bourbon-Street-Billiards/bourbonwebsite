@@ -50,8 +50,9 @@ export default function Header() {
                         <Link href="/menu" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>Menu</Link>
                         <Link href="/league" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>League</Link>
                     </div>
-                    <Link href="/contact" className={styles['header__book-button']} onClick={() => setIsMenuOpen(false)}>Book Now</Link>
+                    <Link href="/contact" className={styles['header__book-button'] + ' ' + styles['mobile']} onClick={() => setIsMenuOpen(false)}>Book Now</Link>
                 </nav>
+                <Link href="/contact" className={styles['header__book-button'] + ' ' + styles['desktop']} onClick={() => setIsMenuOpen(false)}>Book Now</Link>
             </div>
         </header>
     );

@@ -40,7 +40,15 @@ export default function UserDashboard() {
                 </div>
                 <div className={styles['dashboard__actions']}>
                     <button
-                        onClick={() => authClient.signOut()}
+                        onClick={async () => {
+                            try {
+                                await authClient.signOut();
+                                router.push('/auth/sign-in');
+                                router.refresh();
+                            } catch (error) {
+                                console.error('Logout failed', error);
+                            }
+                        }}
                         className={styles['dashboard__button']}
                     >
                         Sign Out
