@@ -26,12 +26,13 @@ export default function Header() {
         <header className={`${styles['header']} ${isScrolled ? styles['header--scrolled'] : ''}`}>
             <div className={styles['header__container']}>
                 <Link href="/" className={styles['header__logo']} onClick={() => setIsMenuOpen(false)}>
-                    <img
+                    <Image
                         src="/assets/logo.png"
                         alt="Bourbon Street Billiards"
                         width={120}
                         height={32}
                         className={styles['header__logo-image']}
+                        priority
                     />
                 </Link>
 

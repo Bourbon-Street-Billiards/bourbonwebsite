@@ -79,13 +79,13 @@ interface BilliardRateRow {
 
 export async function getData(): Promise<AppData> {
     try {
-        const eventsRes = await pool.query('SELECT * FROM events ORDER BY id DESC');
-        const leagueRes = await pool.query('SELECT * FROM league_teams ORDER BY rank ASC');
-
-        // Fetch menu categories and items
-        const categoriesRes = await pool.query('SELECT * FROM menu_categories ORDER BY id ASC');
-        const itemsRes = await pool.query('SELECT * FROM menu_items');
-        const ratesRes = await pool.query('SELECT * FROM billiard_rates ORDER BY id ASC');
+        const [eventsRes, leagueRes, categoriesRes, itemsRes, ratesRes] = await Promise.all([
+            pool.query('SELECT * FROM events ORDER BY id DESC'),
+            pool.query('SELECT * FROM league_teams ORDER BY rank ASC'),
+            pool.query('SELECT * FROM menu_categories ORDER BY id ASC'),
+            pool.query('SELECT * FROM menu_items'),
+            pool.query('SELECT * FROM billiard_rates ORDER BY id ASC')
+        ]);
 
         const menu: MenuCategory[] = categoriesRes.rows.map((cat: MenuCategoryRow) => {
             return {
