@@ -19,6 +19,11 @@
     display: block;
 }
 
+.category__title {
+    margin-bottom: 2rem;
+    padding-bottom: .5rem;
+}
+
 .loading__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

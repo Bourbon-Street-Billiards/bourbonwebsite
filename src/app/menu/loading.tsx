@@ -5,17 +5,17 @@ import pageStyles from './page.module.scss';
 export default function Loading() {
     return (
         <div className={pageStyles['menu']}>
-            <Skeleton width={200} height={40} className={styles['loading__title']} />
-            <div className={styles['loading__list']}>
+            <h1 className={pageStyles['menu__title']}>Food & Drink</h1>
+            <div className={pageStyles['menu__container']}>
                 {[1, 2].map((section) => (
-                    <div key={section}>
-                        <Skeleton width={150} height={30} style={{ marginBottom: '1.5rem' }} />
+                    <section className={pageStyles['menu__category']} key={section}>
+                        <Skeleton width="100%" height={60} className={styles['category__title']} />
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {[1, 2, 3].map((item) => (
-                                <Skeleton key={item} width="100%" height={80} />
+                                <Skeleton key={item} width="100%" height={135} />
                             ))}
                         </div>
-                    </div>
+                    </section>
                 ))}
             </div>
         </div>
