@@ -9,7 +9,7 @@ export default function Loading() {
             <div className={pageStyles['menu__container']}>
                 {[1, 2].map((section) => (
                     <section className={pageStyles['menu__category']} key={section}>
-                        <Skeleton width={107} height={80} className={styles['category__title']} />
+                        <Skeleton width="100%" height={60} className={styles['category__title']} />
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {[1, 2, 3].map((item) => (
                                 <Skeleton key={item} width="100%" height={135} />
