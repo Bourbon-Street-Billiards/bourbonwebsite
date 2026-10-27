@@ -1,33 +1,15 @@
 import { NextResponse } from 'next/server';
-import pool from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/admin';
-import { saveLeague, LeagueTeam } from '@/lib/data';
-
-interface LeagueTeamRow {
-    rank: number;
-    team: string;
-    played: number;
-    won: number;
-    lost: number;
-    points: number;
-}
+import { getLeague, saveLeague, LeagueTeam } from '@/lib/data';
 
 export async function GET() {
     const denied = await requireAdmin();
     if (denied) return denied;
 
     try {
-        const result = await pool.query('SELECT * FROM league_teams ORDER BY rank ASC');
-        const league = result.rows.map((row: LeagueTeamRow) => ({
-            rank: row.rank,
-            team: row.team,
-            played: row.played,
-            won: row.won,
-            lost: row.lost,
-            points: row.points
-        }));
-        return NextResponse.json(league);
+        return NextResponse.json(await getLeague());
     } catch (error) {
+        console.error('Failed to fetch league:', error);
         return NextResponse.json({ error: 'Failed to fetch league' }, { status: 500 });
     }
 }
@@ -41,6 +23,7 @@ export async function POST(request: Request) {
         await saveLeague(league);
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error('Failed to save league:', error);
         return NextResponse.json({ success: false, error: 'Failed to save league' }, { status: 500 });
     }
 }

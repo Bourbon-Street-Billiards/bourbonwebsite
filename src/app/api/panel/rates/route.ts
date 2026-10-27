@@ -1,29 +1,15 @@
 import { NextResponse } from 'next/server';
-import pool from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/admin';
-import { saveRates, BilliardRate } from '@/lib/data';
-
-interface BilliardRateRow {
-    id: number;
-    title: string;
-    price: string;
-    description: string;
-}
+import { getRates, saveRates, BilliardRate } from '@/lib/data';
 
 export async function GET() {
     const denied = await requireAdmin();
     if (denied) return denied;
 
     try {
-        const result = await pool.query('SELECT * FROM billiard_rates ORDER BY id ASC');
-        const rates = result.rows.map((row: BilliardRateRow) => ({
-            id: Number(row.id),
-            title: row.title,
-            price: row.price,
-            description: row.description
-        }));
-        return NextResponse.json(rates);
+        return NextResponse.json(await getRates());
     } catch (error) {
+        console.error('Failed to fetch rates:', error);
         return NextResponse.json({ error: 'Failed to fetch rates' }, { status: 500 });
     }
 }
@@ -37,6 +23,7 @@ export async function POST(request: Request) {
         await saveRates(rates);
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error('Failed to save rates:', error);
         return NextResponse.json({ success: false, error: 'Failed to save rates' }, { status: 500 });
     }
 }
