@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
+import { requireAdmin } from '@/lib/auth/admin';
 import { saveRates, BilliardRate } from '@/lib/data';
 
 interface BilliardRateRow {
@@ -10,6 +11,9 @@ interface BilliardRateRow {
 }
 
 export async function GET() {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const result = await pool.query('SELECT * FROM billiard_rates ORDER BY id ASC');
         const rates = result.rows.map((row: BilliardRateRow) => ({
@@ -25,6 +29,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const rates: BilliardRate[] = await request.json();
         await saveRates(rates);

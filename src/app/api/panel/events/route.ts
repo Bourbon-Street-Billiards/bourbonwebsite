@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
+import { requireAdmin } from '@/lib/auth/admin';
 import { saveEvents, Event } from '@/lib/data';
 
 interface EventRow {
@@ -10,6 +11,9 @@ interface EventRow {
 }
 
 export async function GET() {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const result = await pool.query('SELECT * FROM events ORDER BY id DESC');
         const events = result.rows.map((row: EventRow) => ({
@@ -25,6 +29,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const events: Event[] = await request.json();
         await saveEvents(events);

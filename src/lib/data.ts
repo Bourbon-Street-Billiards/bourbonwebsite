@@ -135,63 +135,6 @@ export async function getData(): Promise<AppData> {
     }
 }
 
-export async function saveData(data: AppData) {
-    const client = await pool.connect();
-    try {
-        await client.query('BEGIN');
-
-        // Clear existing data (full replace strategy)
-        await client.query('TRUNCATE events, menu_categories, menu_items, league_teams, billiard_rates RESTART IDENTITY CASCADE');
-
-        // Insert Events
-        for (const event of data.events) {
-            await client.query(
-                'INSERT INTO events (id, title, date, description) VALUES ($1, $2, $3, $4)',
-                [event.id, event.title, event.date, event.description]
-            );
-        }
-
-        // Insert Menu
-        for (const category of data.menu) {
-            const catRes = await client.query(
-                'INSERT INTO menu_categories (title) VALUES ($1) RETURNING id',
-                [category.title]
-            );
-            const catId = catRes.rows[0].id;
-
-            for (const item of category.items) {
-                await client.query(
-                    'INSERT INTO menu_items (category_id, name, price, description) VALUES ($1, $2, $3, $4)',
-                    [catId, item.name, item.price, item.description]
-                );
-            }
-        }
-
-        // Insert League
-        for (const team of data.league) {
-            await client.query(
-                'INSERT INTO league_teams (rank, team, played, won, lost, points) VALUES ($1, $2, $3, $4, $5, $6)',
-                [team.rank, team.team, team.played, team.won, team.lost, team.points]
-            );
-        }
-
-        // Insert Rates
-        for (const rate of data.rates) {
-            await client.query(
-                'INSERT INTO billiard_rates (id, title, price, description) VALUES ($1, $2, $3, $4)',
-                [rate.id, rate.title, rate.price, rate.description]
-            );
-        }
-
-        await client.query('COMMIT');
-    } catch (error) {
-        await client.query('ROLLBACK');
-        throw error;
-    } finally {
-        client.release();
-    }
-}
-
 // Individual save functions for granular updates
 export async function saveEvents(events: Event[]) {
     const client = await pool.connect();

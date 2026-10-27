@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
+import { requireAdmin } from '@/lib/auth/admin';
 import { saveMenu, MenuCategory } from '@/lib/data';
 
 interface MenuCategoryRow {
@@ -15,6 +16,9 @@ interface MenuItemRow {
 }
 
 export async function GET() {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const categoriesRes = await pool.query('SELECT * FROM menu_categories ORDER BY id ASC');
         const itemsRes = await pool.query('SELECT * FROM menu_items');
@@ -37,6 +41,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const menu: MenuCategory[] = await request.json();
         await saveMenu(menu);

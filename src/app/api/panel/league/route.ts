@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
+import { requireAdmin } from '@/lib/auth/admin';
 import { saveLeague, LeagueTeam } from '@/lib/data';
 
 interface LeagueTeamRow {
@@ -12,6 +13,9 @@ interface LeagueTeamRow {
 }
 
 export async function GET() {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const result = await pool.query('SELECT * FROM league_teams ORDER BY rank ASC');
         const league = result.rows.map((row: LeagueTeamRow) => ({
@@ -29,6 +33,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
     try {
         const league: LeagueTeam[] = await request.json();
         await saveLeague(league);
