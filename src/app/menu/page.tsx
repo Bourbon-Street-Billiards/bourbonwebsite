@@ -1,6 +1,12 @@
 import styles from './page.module.scss';
 import { getData } from '@/lib/data';
 import MenuAccordion from '@/components/menu/MenuAccordion';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Food & Drink',
+    description: 'Pub food, mains and cocktails served to your table at Bourbon Street Billiards.',
+};
 
 // Content is edited in the admin panel, so read it from the database on every request.
 export const dynamic = 'force-dynamic';

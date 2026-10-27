@@ -1,6 +1,12 @@
 import { getData } from '@/lib/data';
 import styles from './page.module.scss';
 import { formatPrice } from '@/lib/format';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Billiard Rates',
+    description: 'Table rates for pool and snooker at Bourbon Street Billiards.',
+};
 
 // Content is edited in the admin panel, so read it from the database on every request.
 export const dynamic = 'force-dynamic';

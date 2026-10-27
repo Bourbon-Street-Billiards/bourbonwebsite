@@ -2,6 +2,12 @@ import { getData } from '@/lib/data';
 import styles from './page.module.scss';
 import { formatPrice } from '@/lib/format';
 import { site } from '@/lib/site';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Contact & Hours',
+    description: 'Address, hours, phone and table rates for Bourbon Street Billiards, 241 Vaughan St, Winnipeg.',
+};
 
 // Content is edited in the admin panel, so read it from the database on every request.
 export const dynamic = 'force-dynamic';

@@ -31,8 +31,17 @@ const crimson = Crimson_Text({
 });
 
 export const metadata: Metadata = {
-    title: 'Bourbon Street Billiards',
-    description: 'The premier pool hall experience.',
+    metadataBase: new URL(process.env.SITE_URL ?? 'http://localhost:3000'),
+    title: {
+        default: 'Bourbon Street Billiards | Pool Hall in Winnipeg',
+        template: '%s | Bourbon Street Billiards',
+    },
+    description: 'Pool and snooker hall in Winnipeg with 11 billiard tables, 5 snooker tables, leagues, tournaments, food and drinks.',
+    openGraph: {
+        siteName: 'Bourbon Street Billiards',
+        type: 'website',
+        locale: 'en_CA',
+    },
 };
 
 export default function RootLayout({

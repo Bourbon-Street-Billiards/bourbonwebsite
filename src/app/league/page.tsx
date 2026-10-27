@@ -1,5 +1,11 @@
 import styles from './page.module.scss';
 import { getData } from '@/lib/data';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'League Standings',
+    description: 'Current standings for the Bourbon Street Billiards pool league.',
+};
 
 // Content is edited in the admin panel, so read it from the database on every request.
 export const dynamic = 'force-dynamic';
