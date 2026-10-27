@@ -88,11 +88,10 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
                         <div className={styles['form-group']}>
                             <label className={styles['form-group__label']}>Date</label>
                             <input
-                                type="date"
                                 className={styles['form-group__input']}
                                 value={eventModal.data.date}
                                 onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, date: e.target.value } })}
-                                placeholder="e.g., Oct 12, 8PM"
+                                placeholder="e.g., Oct 12, 8PM or Every Thursday, 7PM"
                             />
                         </div>
                         <div className={styles['form-group']}>
