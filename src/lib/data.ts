@@ -55,8 +55,7 @@ interface MenuItemRow {
     description: string;
 }
 
-// Readers. Rows are returned in the order they were saved from the panel
-// (ids are assigned by the database on insert).
+// Readers. Rows are returned in the order they were saved from the panel.
 
 export async function getEvents(): Promise<Event[]> {
     const { rows } = await pool.query<Event>('SELECT id, title, date, description FROM events ORDER BY id ASC');
@@ -100,6 +99,8 @@ export async function readOrEmpty<T>(read: () => Promise<T[]>): Promise<T[]> {
 }
 
 // Writers. Each one replaces the whole table inside a transaction.
+// Events and rates get explicit sequential ids: the live tables may have no id default,
+// and sequential ids keep rows in panel order.
 
 async function inTransaction(work: (client: PoolClient) => Promise<void>) {
     const client = await pool.connect();
@@ -118,10 +119,10 @@ async function inTransaction(work: (client: PoolClient) => Promise<void>) {
 export async function saveEvents(events: Omit<Event, 'id'>[]) {
     await inTransaction(async client => {
         await client.query('TRUNCATE events RESTART IDENTITY');
-        for (const event of events) {
+        for (const [index, event] of events.entries()) {
             await client.query(
-                'INSERT INTO events (title, date, description) VALUES ($1, $2, $3)',
-                [event.title, event.date, event.description]
+                'INSERT INTO events (id, title, date, description) VALUES ($1, $2, $3, $4)',
+                [index + 1, event.title, event.date, event.description]
             );
         }
     });
@@ -161,10 +162,10 @@ export async function saveLeague(league: LeagueTeam[]) {
 export async function saveRates(rates: Omit<BilliardRate, 'id'>[]) {
     await inTransaction(async client => {
         await client.query('TRUNCATE billiard_rates RESTART IDENTITY');
-        for (const rate of rates) {
+        for (const [index, rate] of rates.entries()) {
             await client.query(
-                'INSERT INTO billiard_rates (title, price, description) VALUES ($1, $2, $3)',
-                [rate.title, rate.price, rate.description]
+                'INSERT INTO billiard_rates (id, title, price, description) VALUES ($1, $2, $3, $4)',
+                [index + 1, rate.title, rate.price, rate.description]
             );
         }
     });
