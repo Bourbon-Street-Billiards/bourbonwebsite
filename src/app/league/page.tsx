@@ -23,8 +23,8 @@ export default async function LeaguePage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {league.map((team) => (
-                            <tr key={team.rank}>
+                        {league.map((team, index) => (
+                            <tr key={`${index}-${team.team}`}>
                                 <td className={styles['league__rank']}>{team.rank}</td>
                                 <td className={styles['league__team']}>{team.team}</td>
                                 <td>{team.played}</td>

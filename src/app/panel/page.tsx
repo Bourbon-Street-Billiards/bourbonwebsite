@@ -182,10 +182,10 @@ export default function AdminDashboard() {
                             <MenuEditor menu={data.menu} onChange={handleChange('menu')} loading={loading} saving={saving.menu} />
                         )}
                         {activeTab === 'league' && (
-                            <LeagueEditor league={data.league} onChange={handleChange('league')} />
+                            <LeagueEditor league={data.league} onChange={handleChange('league')} loading={loading} saving={saving.league} />
                         )}
                         {activeTab === 'rates' && (
-                            <RatesEditor rates={data.rates} onChange={handleChange('rates')} />
+                            <RatesEditor rates={data.rates} onChange={handleChange('rates')} loading={loading} saving={saving.rates} />
                         )}
                     </div>
                 )}

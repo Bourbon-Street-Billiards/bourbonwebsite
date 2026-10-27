@@ -8,9 +8,11 @@ import styles from '@/app/panel/page.module.scss';
 interface LeagueEditorProps {
     league: LeagueTeam[];
     onChange: (league: LeagueTeam[]) => void;
+    loading: boolean;
+    saving: boolean;
 }
 
-export default function LeagueEditor({ league, onChange }: LeagueEditorProps) {
+export default function LeagueEditor({ league, onChange, loading, saving }: LeagueEditorProps) {
     const [teamModal, setTeamModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -68,7 +70,7 @@ export default function LeagueEditor({ league, onChange }: LeagueEditorProps) {
 
     return (
         <div>
-            <Button onClick={openAddTeam} variant="outline" className={styles['add-button']}>Add Team</Button>
+            <Button disabled={loading || saving} onClick={openAddTeam} variant="outline" className={styles['add-button']}>Add Team</Button>
 
             {teamModal.isOpen && (
                 <div className={styles['modal-overlay']}>
@@ -164,12 +166,14 @@ export default function LeagueEditor({ league, onChange }: LeagueEditorProps) {
                                 <td className={styles['data-table__td']}>
                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                                         <button
+                                            disabled={loading || saving}
                                             onClick={() => openEditTeam(index, team)}
                                             style={{ background: 'none', border: 'none', color: 'var(--color-accent)', cursor: 'pointer', fontFamily: 'var(--font-subheading)' }}
                                         >
                                             Edit
                                         </button>
                                         <button
+                                            disabled={loading || saving}
                                             onClick={() => deleteTeam(index)}
                                             style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', fontFamily: 'var(--font-subheading)' }}
                                         >

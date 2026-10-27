@@ -9,9 +9,11 @@ import { formatPrice } from '@/lib/format';
 interface RatesEditorProps {
     rates: BilliardRate[];
     onChange: (rates: BilliardRate[]) => void;
+    loading: boolean;
+    saving: boolean;
 }
 
-export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
+export default function RatesEditor({ rates, onChange, loading, saving }: RatesEditorProps) {
     const [rateModal, setRateModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -68,7 +70,7 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
 
     return (
         <div>
-            <Button onClick={openAddRate} variant="outline" className={styles['add-button']}>Add Rate</Button>
+            <Button disabled={loading || saving} onClick={openAddRate} variant="outline" className={styles['add-button']}>Add Rate</Button>
 
             {rateModal.isOpen && (
                 <div className={styles['modal-overlay']}>
@@ -121,8 +123,8 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
                             <span className={styles['compact-item__desc']}>{rate.description}</span>
                         </div>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                            <Button onClick={() => openEditRate(index, rate)} variant="outline" className={styles['button--small']}>Edit</Button>
-                            <Button onClick={() => removeRate(index)} variant="delete" className={styles['button--small']}>Delete</Button>
+                            <Button disabled={loading || saving} onClick={() => openEditRate(index, rate)} variant="outline" className={styles['button--small']}>Edit</Button>
+                            <Button disabled={loading || saving} onClick={() => removeRate(index)} variant="delete" className={styles['button--small']}>Delete</Button>
                         </div>
                     </div>
                 ))}
