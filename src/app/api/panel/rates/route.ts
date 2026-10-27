@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
-import { getRates, saveRates, BilliardRate } from '@/lib/data';
+import { getRates, saveRates } from '@/lib/data';
+import { ratesSchema } from '@/lib/validation';
 
 export async function GET() {
     const denied = await requireAdmin();
@@ -19,8 +20,11 @@ export async function POST(request: Request) {
     if (denied) return denied;
 
     try {
-        const rates: BilliardRate[] = await request.json();
-        await saveRates(rates);
+        const parsed = ratesSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return NextResponse.json({ success: false, error: 'Invalid data', issues: parsed.error.issues }, { status: 400 });
+        }
+        await saveRates(parsed.data);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error('Failed to save rates:', error);

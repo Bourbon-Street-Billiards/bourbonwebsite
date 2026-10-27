@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
-import { getLeague, saveLeague, LeagueTeam } from '@/lib/data';
+import { getLeague, saveLeague } from '@/lib/data';
+import { leagueSchema } from '@/lib/validation';
 
 export async function GET() {
     const denied = await requireAdmin();
@@ -19,8 +20,11 @@ export async function POST(request: Request) {
     if (denied) return denied;
 
     try {
-        const league: LeagueTeam[] = await request.json();
-        await saveLeague(league);
+        const parsed = leagueSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return NextResponse.json({ success: false, error: 'Invalid data', issues: parsed.error.issues }, { status: 400 });
+        }
+        await saveLeague(parsed.data);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error('Failed to save league:', error);
