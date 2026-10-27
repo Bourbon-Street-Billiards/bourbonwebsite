@@ -1,6 +1,7 @@
 import { getData } from '@/lib/data';
 import styles from './page.module.scss';
 import { formatPrice } from '@/lib/format';
+import { site } from '@/lib/site';
 
 // Content is edited in the admin panel, so read it from the database on every request.
 export const dynamic = 'force-dynamic';
@@ -17,8 +18,8 @@ export default async function ContactPage() {
                 <div className={styles['contact__info']}>
                     <div className={styles['contact__info-block']}>
                         <h2 className={styles['contact__info-title']}>Location</h2>
-                        <p className={styles['contact__info-text']}>241 Vaughan St</p>
-                        <p className={styles['contact__info-text']}>Winnipeg, MB, Canada</p>
+                        <p className={styles['contact__info-text']}>{site.street}</p>
+                        <p className={styles['contact__info-text']}>{site.city}</p>
                         <div className={styles['contact__map']}>
                             <iframe
                                 src="https://maps.google.com/maps?q=Bourbon%20Street%20Billiards%20241%20Vaughan%20St%20Winnipeg%20MB&t=&z=15&ie=UTF8&iwloc=&output=embed"
@@ -34,13 +35,14 @@ export default async function ContactPage() {
 
                     <div className={styles['contact__info-block']}>
                         <h2 className={styles['contact__info-title']}>Hours</h2>
-                        <p className={styles['contact__info-text']}>Sun - Thu: 10am - 3am</p>
-                        <p className={styles['contact__info-text']}>Fri - Sat: 10am - 4am</p>
+                        {site.hours.map(({ days, time }) => (
+                            <p key={days} className={styles['contact__info-text']}>{days}: {time}</p>
+                        ))}
                     </div>
 
                     <div className={styles['contact__info-block']}>
                         <h2 className={styles['contact__info-title']}>Contact</h2>
-                        <p className={styles['contact__info-text']}>204-957-1293</p>
+                        <p className={styles['contact__info-text']}><a href={site.phoneHref}>{site.phone}</a></p>
                     </div>
                 </div>
 
