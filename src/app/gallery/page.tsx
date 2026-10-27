@@ -1,6 +1,12 @@
 import styles from './page.module.scss';
 
 import GalleryImage from '@/components/gallery/GalleryImage';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Gallery',
+    description: 'Photos of the tables and lounge at Bourbon Street Billiards.',
+};
 
 // Local images from public/assets/gallery
 const images = [

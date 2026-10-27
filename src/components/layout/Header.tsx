@@ -36,13 +36,20 @@ export default function Header() {
                     />
                 </Link>
 
-                <button className={`${styles['header__hamburger']} ${isMenuOpen ? styles['header__hamburger--active'] : ''}`} onClick={toggleMenu}>
+                <button
+                    type="button"
+                    className={`${styles['header__hamburger']} ${isMenuOpen ? styles['header__hamburger--active'] : ''}`}
+                    onClick={toggleMenu}
+                    aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={isMenuOpen}
+                    aria-controls="site-nav"
+                >
                     <span className={styles['header__hamburger-bar']}></span>
                     <span className={styles['header__hamburger-bar']}></span>
                     <span className={styles['header__hamburger-bar']}></span>
                 </button>
 
-                <nav className={`${styles['header__nav']} ${isMenuOpen ? styles['header__nav--open'] : ''}`}>
+                <nav id="site-nav" className={`${styles['header__nav']} ${isMenuOpen ? styles['header__nav--open'] : ''}`}>
                     <div className={styles['header__nav-links']}>
                         <Link href="/" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>Home</Link>
                         <Link href="/events" className={styles['header__nav-link']} onClick={() => setIsMenuOpen(false)}>Events</Link>

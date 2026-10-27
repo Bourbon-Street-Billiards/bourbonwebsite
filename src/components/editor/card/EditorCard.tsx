@@ -1,11 +1,12 @@
 import styles from "./editorcard.module.scss";
 import Button from "@/components/ui/Button";
 import Skeleton from "@/components/ui/Skeleton";
+import type { Event } from "@/lib/data";
 
 interface EditorCardProps {
-    data: any,
+    data: Event | null,
     index: number,
-    openEditEvent: (index: number, data: any) => void,
+    openEditEvent: (index: number, data: Event) => void,
     removeEvent: (index: number) => void,
     loading: boolean,
     saving: boolean
@@ -13,10 +14,10 @@ interface EditorCardProps {
 
 const EditorCard = ({ data, index, openEditEvent, removeEvent, loading, saving }: EditorCardProps) => {
     return (
-        <div key={data == null ? index : data.id} className={styles['editor-card']}>
+        <div className={styles['editor-card']}>
             <div className={styles['editor-card__header']}>
                 {
-                    loading ? (
+                    loading || !data ? (
                         <>
                             <Skeleton height="1.5rem" className={styles['editor-card__title']} />
                             <Skeleton height="1.5rem" width="10%" className={styles['editor-card__date-price']} />
@@ -25,14 +26,14 @@ const EditorCard = ({ data, index, openEditEvent, removeEvent, loading, saving }
                     ) : (
                         <>
                             <span className={styles['editor-card__title']}>{data.title}</span>
-                            <span className={styles['editor-card__date-price']}>{data.date || data.price}</span>
+                            <span className={styles['editor-card__date-price']}>{data.date}</span>
                         </>
                     )
                 }
             </div>
             <div className={styles['editor-card__body']}>
                 {
-                    loading ? (
+                    loading || !data ? (
                         <Skeleton height="1rem" width="100%" className={styles['editor-card__desc']} />
                     ) : (
                         <span className={styles['editor-card__desc']}>{data.description}</span>
@@ -41,7 +42,7 @@ const EditorCard = ({ data, index, openEditEvent, removeEvent, loading, saving }
             </div>
             <div className={styles['editor-card__footer']}>
                 {
-                    loading ? (
+                    loading || !data ? (
                         <>
                             <Skeleton height="54px" width="120px" className={styles['editor-card__button']} />
                             <Skeleton height="54px" width="120px" className={styles['editor-card__button']} />

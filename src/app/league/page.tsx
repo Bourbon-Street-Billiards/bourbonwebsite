@@ -1,8 +1,17 @@
 import styles from './page.module.scss';
-import { getData } from '@/lib/data';
+import { getLeague, readOrEmpty } from '@/lib/data';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'League Standings',
+    description: 'Current standings for the Bourbon Street Billiards pool league.',
+};
+
+// Content is edited in the admin panel, so read it from the database on every request.
+export const dynamic = 'force-dynamic';
 
 export default async function LeaguePage() {
-    const { league } = await getData();
+    const league = await readOrEmpty(getLeague);
     return (
 
         <main className={styles['league']}>
@@ -20,8 +29,8 @@ export default async function LeaguePage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {league.map((team) => (
-                            <tr key={team.rank}>
+                        {league.map((team, index) => (
+                            <tr key={`${index}-${team.team}`}>
                                 <td className={styles['league__rank']}>{team.rank}</td>
                                 <td className={styles['league__team']}>{team.team}</td>
                                 <td>{team.played}</td>

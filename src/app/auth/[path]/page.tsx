@@ -1,7 +1,12 @@
 import styles from './page.module.scss';
-import { AuthView } from '@neondatabase/auth/react';
+import { AuthView, authViewPaths } from '@neondatabase/auth/react';
 
 export const dynamicParams = false;
+
+// Required with dynamicParams = false, otherwise every /auth/* path 404s.
+export function generateStaticParams() {
+    return Object.values(authViewPaths).map((path) => ({ path }));
+}
 
 export default async function AuthPage({ params }: { params: Promise<{ path: string }> }) {
     const { path } = await params;
