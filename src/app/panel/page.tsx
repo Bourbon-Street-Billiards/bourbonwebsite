@@ -4,29 +4,30 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth/client';
 import styles from './page.module.scss';
-import { AppData, Event, MenuCategory, LeagueTeam, BilliardRate } from '@/lib/data';
+import type { AppData } from '@/lib/data';
 import EditorLoading from '@/components/editor/EditorLoading';
 import EventsEditor from '@/components/editor/EventsEditor';
 import MenuEditor from '@/components/editor/MenuEditor';
 import LeagueEditor from '@/components/editor/LeagueEditor';
 import RatesEditor from '@/components/editor/RatesEditor';
 
-type SavingState = {
-    events: boolean;
-    menu: boolean;
-    league: boolean;
-    rates: boolean;
-};
+type Section = keyof AppData;
+type SavingState = Record<Section, boolean>;
+
+const SECTIONS: Section[] = ['events', 'menu', 'league', 'rates'];
 
 export default function AdminDashboard() {
     const [data, setData] = useState<AppData | null>(null);
-    const [activeTab, setActiveTab] = useState<'events' | 'menu' | 'league' | 'rates'>('events');
+    const [activeTab, setActiveTab] = useState<Section>('events');
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [saving, setSaving] = useState<SavingState>({ events: false, menu: false, league: false, rates: false });
+    const [saveError, setSaveError] = useState(false);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
     const { data: session, isPending } = authClient.useSession();
+    const isAdmin = session?.user?.role === 'admin';
 
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -38,140 +39,74 @@ export default function AdminDashboard() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Debounce refs for each data type
-    const eventsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const leagueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const ratesTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Debounce timers, one per section
+    const saveTimeouts = useRef<Partial<Record<Section, NodeJS.Timeout>>>({});
+    const hasFetched = useRef(false);
 
     useEffect(() => {
         if (!isPending && !session) {
             router.push('/auth/sign-in');
             return;
         }
-        if (session && session.user?.role !== 'admin') {
+        if (session && !isAdmin) {
             router.push('/dashboard');
             return;
         }
-        if (session && session.user?.role === 'admin') {
+        // Load once; a refreshed session object must not overwrite unsaved edits.
+        if (isAdmin && !hasFetched.current) {
+            hasFetched.current = true;
             fetchData();
         }
-    }, [router, session, isPending]);
+    }, [router, session, isPending, isAdmin]);
+
+    const isSaving = SECTIONS.some(section => saving[section]);
+
+    // Warn before leaving while a debounced or in-flight save is pending.
+    useEffect(() => {
+        if (!isSaving) return;
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => e.preventDefault();
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [isSaving]);
 
     const fetchData = async () => {
         try {
-            const [eventsRes, menuRes, leagueRes, ratesRes] = await Promise.all([
-                fetch('/api/panel/events'),
-                fetch('/api/panel/menu'),
-                fetch('/api/panel/league'),
-                fetch('/api/panel/rates'),
-            ]);
-            const [events, menu, league, rates] = await Promise.all([
-                eventsRes.json(),
-                menuRes.json(),
-                leagueRes.json(),
-                ratesRes.json(),
-            ]);
+            const responses = await Promise.all(SECTIONS.map(section => fetch(`/api/panel/${section}`)));
+            if (responses.some(res => !res.ok)) throw new Error('Failed to load panel data');
+            const [events, menu, league, rates] = await Promise.all(responses.map(res => res.json()));
             setData({ events, menu, league, rates });
         } catch (error) {
             console.error('Failed to fetch data', error);
+            setLoadError(true);
         } finally {
             setLoading(false);
         }
     };
 
-    // Individual save functions
-    const saveEvents = async (events: Event[]) => {
-        setSaving(s => ({ ...s, events: true }));
+    const save = async <K extends Section>(section: K, value: AppData[K]) => {
         try {
-            const res = await fetch('/api/panel/events', {
+            const res = await fetch(`/api/panel/${section}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(events),
+                body: JSON.stringify(value),
             });
-            if (res.ok) setLastSaved(new Date());
+            if (!res.ok) throw new Error(`Save failed with status ${res.status}`);
+            setSaveError(false);
+            setLastSaved(new Date());
         } catch (error) {
-            console.error('Failed to save events', error);
+            console.error(`Failed to save ${section}`, error);
+            setSaveError(true);
         } finally {
-            setSaving(s => ({ ...s, events: false }));
+            setSaving(s => ({ ...s, [section]: false }));
         }
     };
 
-    const saveMenu = async (menu: MenuCategory[]) => {
-        setSaving(s => ({ ...s, menu: true }));
-        try {
-            const res = await fetch('/api/panel/menu', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(menu),
-            });
-            if (res.ok) setLastSaved(new Date());
-        } catch (error) {
-            console.error('Failed to save menu', error);
-        } finally {
-            setSaving(s => ({ ...s, menu: false }));
-        }
-    };
-
-    const saveLeague = async (league: LeagueTeam[]) => {
-        setSaving(s => ({ ...s, league: true }));
-        try {
-            const res = await fetch('/api/panel/league', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(league),
-            });
-            if (res.ok) setLastSaved(new Date());
-        } catch (error) {
-            console.error('Failed to save league', error);
-        } finally {
-            setSaving(s => ({ ...s, league: false }));
-        }
-    };
-
-    const saveRates = async (rates: BilliardRate[]) => {
-        setSaving(s => ({ ...s, rates: true }));
-        try {
-            const res = await fetch('/api/panel/rates', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(rates),
-            });
-            if (res.ok) setLastSaved(new Date());
-        } catch (error) {
-            console.error('Failed to save rates', error);
-        } finally {
-            setSaving(s => ({ ...s, rates: false }));
-        }
-    };
-
-    // Debounced change handlers
-    const handleEventsChange = (events: Event[]) => {
-        setData(d => d ? { ...d, events } : null);
-        if (eventsTimeoutRef.current) clearTimeout(eventsTimeoutRef.current);
-        setSaving(s => ({ ...s, events: true }));
-        eventsTimeoutRef.current = setTimeout(() => saveEvents(events), 1000);
-    };
-
-    const handleMenuChange = (menu: MenuCategory[]) => {
-        setData(d => d ? { ...d, menu } : null);
-        if (menuTimeoutRef.current) clearTimeout(menuTimeoutRef.current);
-        setSaving(s => ({ ...s, menu: true }));
-        menuTimeoutRef.current = setTimeout(() => saveMenu(menu), 1000);
-    };
-
-    const handleLeagueChange = (league: LeagueTeam[]) => {
-        setData(d => d ? { ...d, league } : null);
-        if (leagueTimeoutRef.current) clearTimeout(leagueTimeoutRef.current);
-        setSaving(s => ({ ...s, league: true }));
-        leagueTimeoutRef.current = setTimeout(() => saveLeague(league), 1000);
-    };
-
-    const handleRatesChange = (rates: BilliardRate[]) => {
-        setData(d => d ? { ...d, rates } : null);
-        if (ratesTimeoutRef.current) clearTimeout(ratesTimeoutRef.current);
-        setSaving(s => ({ ...s, rates: true }));
-        ratesTimeoutRef.current = setTimeout(() => saveRates(rates), 1000);
+    // Debounced change handler shared by all editors
+    const handleChange = <K extends Section>(section: K) => (value: AppData[K]) => {
+        setData(d => d ? { ...d, [section]: value } : null);
+        clearTimeout(saveTimeouts.current[section]);
+        setSaving(s => ({ ...s, [section]: true }));
+        saveTimeouts.current[section] = setTimeout(() => save(section, value), 1000);
     };
 
     const handleLogout = async () => {
@@ -185,16 +120,13 @@ export default function AdminDashboard() {
     };
 
     const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-    const handleTabChange = (tab: 'events' | 'menu' | 'league' | 'rates') => {
+    const handleTabChange = (tab: Section) => {
         setActiveTab(tab);
         setIsMobileMenuOpen(false);
     };
 
-    const isSaving = saving.events || saving.menu || saving.league || saving.rates;
-
     if (isPending) return null;
-    if (!session) return null;
-    if (session.user?.role !== 'admin') return null;
+    if (!session || !isAdmin) return null;
 
     return (
         <div className={styles['panel']}>
@@ -226,7 +158,9 @@ export default function AdminDashboard() {
                     <div className={styles['panel__sync-status']}>
                         Status:
                         {isSaving ? (
-                            <span style={{ color: 'var(--color-text-accent)' }}>Saving...</span>
+                            <span style={{ color: 'var(--color-accent)' }}>Saving...</span>
+                        ) : saveError ? (
+                            <span role="alert" style={{ color: '#ff4444' }}>Save failed. Your last change was not stored.</span>
                         ) : lastSaved ? (
                             <span style={{ color: 'var(--color-text-muted)' }}>Saved {lastSaved.toLocaleTimeString()}</span>
                         ) : (
@@ -235,21 +169,23 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
-                {loading || !data ? (
+                {loadError ? (
+                    <p role="alert" style={{ color: '#ff4444' }}>Could not load data. Refresh the page to try again.</p>
+                ) : loading || !data ? (
                     <EditorLoading />
                 ) : (
                     <div className={styles['panel__section']}>
                         {activeTab === 'events' && (
-                            <EventsEditor events={data.events} onChange={handleEventsChange} loading={loading} saving={saving.events} />
+                            <EventsEditor events={data.events} onChange={handleChange('events')} loading={loading} saving={saving.events} />
                         )}
                         {activeTab === 'menu' && (
-                            <MenuEditor menu={data.menu} onChange={handleMenuChange} loading={loading} saving={saving.menu} />
+                            <MenuEditor menu={data.menu} onChange={handleChange('menu')} loading={loading} saving={saving.menu} />
                         )}
                         {activeTab === 'league' && (
-                            <LeagueEditor league={data.league} onChange={handleLeagueChange} />
+                            <LeagueEditor league={data.league} onChange={handleChange('league')} />
                         )}
                         {activeTab === 'rates' && (
-                            <RatesEditor rates={data.rates} onChange={handleRatesChange} />
+                            <RatesEditor rates={data.rates} onChange={handleChange('rates')} />
                         )}
                     </div>
                 )}
