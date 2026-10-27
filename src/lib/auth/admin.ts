@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { authServer } from './server';
+import { getAuthServer } from './server';
 
 // Only the fields isAdmin reads, so this accepts whatever session shape the auth client returns.
 type Session = { user?: { role?: string | null } | null } | null | undefined;
@@ -11,7 +11,7 @@ export function isAdmin(session: Session): boolean {
 
 // Returns the admin session, or null if the request isn't from a signed-in admin.
 export async function getAdminSession() {
-    const { data: session } = await authServer.getSession();
+    const { data: session } = await getAuthServer().getSession();
     return isAdmin(session) ? session : null;
 }
 
