@@ -1,6 +1,9 @@
 import styles from './page.module.scss';
 import { getData } from '@/lib/data';
 
+// Content is edited in the admin panel, so read it from the database on every request.
+export const dynamic = 'force-dynamic';
+
 export default async function LeaguePage() {
     const { league } = await getData();
     return (
