@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { authServer } from './server';
 
-type Session = Awaited<ReturnType<typeof authServer.getSession>>['data'];
+// Only the fields isAdmin reads, so this accepts whatever session shape the auth client returns.
+type Session = { user?: { role?: string | null } | null } | null | undefined;
 
 // The single definition of who counts as an admin, shared by the API routes and the /panel gate.
 export function isAdmin(session: Session): boolean {

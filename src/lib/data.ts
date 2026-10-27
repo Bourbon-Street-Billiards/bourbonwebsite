@@ -1,59 +1,60 @@
 import type { PoolClient } from 'pg';
 import pool from './db';
 
-export interface Event {
+export type Event = {
     id: number;
     title: string;
     date: string;
     description: string;
-}
+};
 
-export interface MenuItem {
+export type MenuItem = {
     name: string;
     price: string;
     description: string;
-}
+};
 
-export interface MenuCategory {
+export type MenuCategory = {
     title: string;
     items: MenuItem[];
-}
+};
 
-export interface LeagueTeam {
+export type LeagueTeam = {
     rank: number;
     team: string;
     played: number;
     won: number;
     lost: number;
     points: number;
-}
+};
 
-export interface BilliardRate {
+export type BilliardRate = {
     id: number;
     title: string;
     price: string;
     description: string;
-}
+};
 
-export interface AppData {
+export type AppData = {
     events: Event[];
     menu: MenuCategory[];
     league: LeagueTeam[];
     rates: BilliardRate[];
-}
+};
 
-// Database row types
-interface MenuCategoryRow {
+// Database row types. These are type aliases, not interfaces: pg's query<T>() needs an
+// implicit index signature, which interfaces don't get.
+type MenuCategoryRow = {
     id: number;
     title: string;
-}
+};
 
-interface MenuItemRow {
+type MenuItemRow = {
     category_id: number;
     name: string;
     price: string;
     description: string;
-}
+};
 
 // Readers. Rows are returned in the order they were saved from the panel.
 
