@@ -1,17 +1,12 @@
 'use client';
 
 import styles from './Footer.module.scss';
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { site } from '@/lib/site';
 
 export default function Footer() {
     const pathname = usePathname();
-    const [isPanel, setIsPanel] = useState(false);
-
-    useEffect(() => {
-        if (pathname?.startsWith('/panel')) setIsPanel(true);
-        else setIsPanel(false);
-    }, [pathname]);
+    const isPanel = pathname?.startsWith('/panel') ?? false;
 
     return (
         <footer className={styles['footer'] + (isPanel ? ' ' + styles['footer--panel'] : '')}>
@@ -22,13 +17,14 @@ export default function Footer() {
                 </div>
                 <div className={styles['footer__section']}>
                     <h4 className={styles['footer__subheading']}>Contact</h4>
-                    <p className={styles['footer__text']}>241 Vaughan St, Winnipeg, MB, Canada</p>
-                    <p className={styles['footer__text']}>204-957-1293</p>
+                    <p className={styles['footer__text']}>{site.street}, {site.city}</p>
+                    <p className={styles['footer__text']}><a href={site.phoneHref}>{site.phone}</a></p>
                 </div>
                 <div className={styles['footer__section']}>
                     <h4 className={styles['footer__subheading']}>Hours</h4>
-                    <p className={styles['footer__text']}>Sun-Thurs: 10am - 3am</p>
-                    <p className={styles['footer__text']}>Fri-Sat: 10am - 4am</p>
+                    {site.hours.map(({ days, time }) => (
+                        <p key={days} className={styles['footer__text']}>{days}: {time}</p>
+                    ))}
                 </div>
             </div>
             <div className={styles['footer__copyright']}>

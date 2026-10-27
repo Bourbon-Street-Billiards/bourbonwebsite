@@ -2,15 +2,20 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
-import { BilliardRate } from '@/lib/data';
+import EditorModal from '@/components/editor/EditorModal';
+import type { BilliardRate } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
+import { LIMITS } from '@/lib/validation';
+import { formatPrice } from '@/lib/format';
 
 interface RatesEditorProps {
     rates: BilliardRate[];
     onChange: (rates: BilliardRate[]) => void;
+    loading: boolean;
+    saving: boolean;
 }
 
-export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
+export default function RatesEditor({ rates, onChange, loading, saving }: RatesEditorProps) {
     const [rateModal, setRateModal] = useState<{
         isOpen: boolean;
         mode: 'add' | 'edit';
@@ -44,7 +49,8 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
     };
 
     const saveRate = () => {
-        const { index, mode, data } = rateModal;
+        const { index, mode } = rateModal;
+        const data = { ...rateModal.data, title: rateModal.data.title.trim(), price: rateModal.data.price.trim() };
         if (!data.title || !data.price) return;
 
         const newRates = [...rates];
@@ -67,46 +73,49 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
 
     return (
         <div>
-            <Button onClick={openAddRate} variant="outline" className={styles['add-button']}>Add Rate</Button>
+            <Button disabled={loading || saving} onClick={openAddRate} variant="outline" className={styles['add-button']}>Add Rate</Button>
 
             {rateModal.isOpen && (
-                <div className={styles['modal-overlay']}>
-                    <div className={styles['modal']}>
-                        <h3 className={styles['modal__title']}>{rateModal.mode === 'add' ? 'Add Rate' : 'Edit Rate'}</h3>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Title</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={rateModal.data.title}
-                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, title: e.target.value } })}
-                                placeholder="e.g., Hourly Rate"
-                                autoFocus
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Price</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={rateModal.data.price}
-                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, price: e.target.value } })}
-                                placeholder="$0.00"
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Description</label>
-                            <textarea
-                                className={styles['form-group__textarea']}
-                                value={rateModal.data.description}
-                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, description: e.target.value } })}
-                                placeholder="Details..."
-                            />
-                        </div>
-                        <div className={styles['modal__actions']}>
-                            <Button onClick={closeRateModal} variant="outline">Cancel</Button>
-                            <Button onClick={saveRate}>{rateModal.mode === 'add' ? 'Add' : 'Save'}</Button>
-                        </div>
+                <EditorModal title={rateModal.mode === 'add' ? 'Add Rate' : 'Edit Rate'} onClose={closeRateModal}>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="rate-title" className={styles['form-group__label']}>Title</label>
+                        <input
+                            id="rate-title"
+                            maxLength={LIMITS.title}
+                            className={styles['form-group__input']}
+                            value={rateModal.data.title}
+                            onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, title: e.target.value } })}
+                            placeholder="e.g., Hourly Rate"
+                            autoFocus
+                        />
                     </div>
-                </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="rate-price" className={styles['form-group__label']}>Price</label>
+                        <input
+                            id="rate-price"
+                            maxLength={LIMITS.price}
+                            className={styles['form-group__input']}
+                            value={rateModal.data.price}
+                            onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, price: e.target.value } })}
+                            placeholder="$0.00"
+                        />
+                    </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="rate-description" className={styles['form-group__label']}>Description</label>
+                        <textarea
+                            id="rate-description"
+                            maxLength={LIMITS.description}
+                            className={styles['form-group__textarea']}
+                            value={rateModal.data.description}
+                            onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, description: e.target.value } })}
+                            placeholder="Details..."
+                        />
+                    </div>
+                    <div className={styles['modal__actions']}>
+                        <Button onClick={closeRateModal} variant="outline">Cancel</Button>
+                        <Button onClick={saveRate}>{rateModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                    </div>
+                </EditorModal>
             )}
 
             <div className={styles['card-grid']}>
@@ -115,13 +124,13 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
                         <div className={styles['compact-item__info']}>
                             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
                                 <span className={styles['compact-item__name']}>{rate.title}</span>
-                                <span className={styles['compact-item__price']}>{rate.price}</span>
+                                <span className={styles['compact-item__price']}>{formatPrice(rate.price)}</span>
                             </div>
                             <span className={styles['compact-item__desc']}>{rate.description}</span>
                         </div>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                            <Button onClick={() => openEditRate(index, rate)} variant="outline" className={styles['button--small']}>Edit</Button>
-                            <Button onClick={() => removeRate(index)} variant="delete" className={styles['button--small']}>Delete</Button>
+                            <Button disabled={loading || saving} onClick={() => openEditRate(index, rate)} variant="outline" className={styles['button--small']}>Edit</Button>
+                            <Button disabled={loading || saving} onClick={() => removeRate(index)} variant="delete" className={styles['button--small']}>Delete</Button>
                         </div>
                     </div>
                 ))}

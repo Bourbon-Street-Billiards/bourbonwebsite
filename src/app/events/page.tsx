@@ -1,8 +1,17 @@
 import styles from './page.module.scss';
-import { getData } from '@/lib/data';
+import { getEvents, readOrEmpty } from '@/lib/data';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Events',
+    description: 'Tournaments, live music and special nights at Bourbon Street Billiards in Winnipeg.',
+};
+
+// Content is edited in the admin panel, so read it from the database on every request.
+export const dynamic = 'force-dynamic';
 
 export default async function EventsPage() {
-    const { events } = await getData();
+    const events = await readOrEmpty(getEvents);
     return (
 
         <main className={styles['events']}>
