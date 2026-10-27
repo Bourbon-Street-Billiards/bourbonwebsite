@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import EditorModal from '@/components/editor/EditorModal';
 import type { BilliardRate } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
+import { LIMITS } from '@/lib/validation';
 import { formatPrice } from '@/lib/format';
 
 interface RatesEditorProps {
@@ -48,7 +49,8 @@ export default function RatesEditor({ rates, onChange, loading, saving }: RatesE
     };
 
     const saveRate = () => {
-        const { index, mode, data } = rateModal;
+        const { index, mode } = rateModal;
+        const data = { ...rateModal.data, title: rateModal.data.title.trim(), price: rateModal.data.price.trim() };
         if (!data.title || !data.price) return;
 
         const newRates = [...rates];
@@ -79,6 +81,7 @@ export default function RatesEditor({ rates, onChange, loading, saving }: RatesE
                         <label htmlFor="rate-title" className={styles['form-group__label']}>Title</label>
                         <input
                             id="rate-title"
+                            maxLength={LIMITS.title}
                             className={styles['form-group__input']}
                             value={rateModal.data.title}
                             onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, title: e.target.value } })}
@@ -90,6 +93,7 @@ export default function RatesEditor({ rates, onChange, loading, saving }: RatesE
                         <label htmlFor="rate-price" className={styles['form-group__label']}>Price</label>
                         <input
                             id="rate-price"
+                            maxLength={LIMITS.price}
                             className={styles['form-group__input']}
                             value={rateModal.data.price}
                             onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, price: e.target.value } })}
@@ -100,6 +104,7 @@ export default function RatesEditor({ rates, onChange, loading, saving }: RatesE
                         <label htmlFor="rate-description" className={styles['form-group__label']}>Description</label>
                         <textarea
                             id="rate-description"
+                            maxLength={LIMITS.description}
                             className={styles['form-group__textarea']}
                             value={rateModal.data.description}
                             onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, description: e.target.value } })}

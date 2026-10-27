@@ -58,14 +58,14 @@ interface MenuItemRow {
 // Readers. Rows are returned in the order they were saved from the panel.
 
 export async function getEvents(): Promise<Event[]> {
-    const { rows } = await pool.query<Event>('SELECT id, title, date, description FROM events ORDER BY id ASC');
+    const { rows } = await pool.query<Event>("SELECT id, title, date, COALESCE(description, '') AS description FROM events ORDER BY id ASC");
     return rows.map(row => ({ ...row, id: Number(row.id) }));
 }
 
 export async function getMenu(): Promise<MenuCategory[]> {
     const [categoriesRes, itemsRes] = await Promise.all([
         pool.query<MenuCategoryRow>('SELECT id, title FROM menu_categories ORDER BY id ASC'),
-        pool.query<MenuItemRow>('SELECT category_id, name, price, description FROM menu_items ORDER BY id ASC'),
+        pool.query<MenuItemRow>("SELECT category_id, name, price, COALESCE(description, '') AS description FROM menu_items ORDER BY id ASC"),
     ]);
 
     return categoriesRes.rows.map(cat => ({
@@ -78,13 +78,15 @@ export async function getMenu(): Promise<MenuCategory[]> {
 
 export async function getLeague(): Promise<LeagueTeam[]> {
     const { rows } = await pool.query<LeagueTeam>(
-        'SELECT rank, team, played, won, lost, points FROM league_teams ORDER BY rank ASC, id ASC'
+        `SELECT rank, team, COALESCE(played, 0) AS played, COALESCE(won, 0) AS won,
+                COALESCE(lost, 0) AS lost, COALESCE(points, 0) AS points
+         FROM league_teams ORDER BY rank ASC, id ASC`
     );
     return rows;
 }
 
 export async function getRates(): Promise<BilliardRate[]> {
-    const { rows } = await pool.query<BilliardRate>('SELECT id, title, price, description FROM billiard_rates ORDER BY id ASC');
+    const { rows } = await pool.query<BilliardRate>("SELECT id, title, price, COALESCE(description, '') AS description FROM billiard_rates ORDER BY id ASC");
     return rows.map(row => ({ ...row, id: Number(row.id) }));
 }
 

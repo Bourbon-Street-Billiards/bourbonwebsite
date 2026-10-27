@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import EditorModal from '@/components/editor/EditorModal';
 import type { MenuCategory, MenuItem } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
+import { LIMITS } from '@/lib/validation';
 import { formatPrice } from '@/lib/format';
 
 interface MenuEditorProps {
@@ -55,7 +56,8 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
     };
 
     const saveItem = () => {
-        const { catIndex, itemIndex, mode, data } = itemModal;
+        const { catIndex, itemIndex, mode } = itemModal;
+        const data = { ...itemModal.data, name: itemModal.data.name.trim(), price: itemModal.data.price.trim() };
         if (!data.name || !data.price) return;
 
         const newMenu = menu.map((category, i) => {
@@ -71,7 +73,7 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
 
     const addCategory = () => {
         if (!newCategoryTitle.trim()) return;
-        const newMenu = [...menu, { title: newCategoryTitle, items: [] }];
+        const newMenu = [...menu, { title: newCategoryTitle.trim(), items: [] }];
         onChange(newMenu);
         setNewCategoryTitle('');
         setIsAddingCategory(false);
@@ -103,6 +105,7 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
                         <label htmlFor="menu-category-title" className={styles['form-group__label']}>Category Title</label>
                         <input
                             id="menu-category-title"
+                            maxLength={LIMITS.title}
                             className={styles['form-group__input']}
                             value={newCategoryTitle}
                             onChange={(e) => setNewCategoryTitle(e.target.value)}
@@ -123,6 +126,7 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
                         <label htmlFor="menu-name" className={styles['form-group__label']}>Name</label>
                         <input
                             id="menu-name"
+                            maxLength={LIMITS.title}
                             className={styles['form-group__input']}
                             value={itemModal.data.name}
                             onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, name: e.target.value } })}
@@ -134,6 +138,7 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
                         <label htmlFor="menu-price" className={styles['form-group__label']}>Price</label>
                         <input
                             id="menu-price"
+                            maxLength={LIMITS.price}
                             className={styles['form-group__input']}
                             value={itemModal.data.price}
                             onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, price: e.target.value } })}
@@ -144,6 +149,7 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
                         <label htmlFor="menu-description" className={styles['form-group__label']}>Description</label>
                         <textarea
                             id="menu-description"
+                            maxLength={LIMITS.description}
                             className={styles['form-group__textarea']}
                             value={itemModal.data.description}
                             onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, description: e.target.value } })}

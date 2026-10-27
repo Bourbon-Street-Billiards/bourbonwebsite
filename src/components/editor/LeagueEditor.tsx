@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import EditorModal from '@/components/editor/EditorModal';
 import type { LeagueTeam } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
+import { LIMITS } from '@/lib/validation';
 
 interface LeagueEditorProps {
     league: LeagueTeam[];
@@ -47,7 +48,8 @@ export default function LeagueEditor({ league, onChange, loading, saving }: Leag
     };
 
     const saveTeam = () => {
-        const { index, mode, data } = teamModal;
+        const { index, mode } = teamModal;
+        const data = { ...teamModal.data, team: teamModal.data.team.trim() };
         if (!data.team) return;
 
         const newLeague = [...league];
@@ -79,16 +81,19 @@ export default function LeagueEditor({ league, onChange, loading, saving }: Leag
                         <label htmlFor="team-rank" className={styles['form-group__label']}>Rank</label>
                         <input
                             id="team-rank"
+                            min={0}
+                            max={LIMITS.count}
                             type="number"
                             className={styles['form-group__input']}
                             value={teamModal.data.rank}
-                            onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, rank: parseInt(e.target.value) || 0 } })}
+                            onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, rank: Math.min(LIMITS.count, Math.max(0, parseInt(e.target.value) || 0)) } })}
                         />
                     </div>
                     <div className={styles['form-group']}>
                         <label htmlFor="team-team-name" className={styles['form-group__label']}>Team Name</label>
                         <input
                             id="team-team-name"
+                            maxLength={LIMITS.title}
                             className={styles['form-group__input']}
                             value={teamModal.data.team}
                             onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, team: e.target.value } })}
@@ -101,40 +106,48 @@ export default function LeagueEditor({ league, onChange, loading, saving }: Leag
                             <label htmlFor="team-points" className={styles['form-group__label']}>Points</label>
                             <input
                                 id="team-points"
+                                min={0}
+                                max={LIMITS.count}
                                 type="number"
                                 className={styles['form-group__input']}
                                 value={teamModal.data.points}
-                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, points: parseInt(e.target.value) || 0 } })}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, points: Math.min(LIMITS.count, Math.max(0, parseInt(e.target.value) || 0)) } })}
                             />
                         </div>
                         <div className={styles['form-group']}>
                             <label htmlFor="team-played" className={styles['form-group__label']}>Played</label>
                             <input
                                 id="team-played"
+                                min={0}
+                                max={LIMITS.count}
                                 type="number"
                                 className={styles['form-group__input']}
                                 value={teamModal.data.played}
-                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, played: parseInt(e.target.value) || 0 } })}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, played: Math.min(LIMITS.count, Math.max(0, parseInt(e.target.value) || 0)) } })}
                             />
                         </div>
                         <div className={styles['form-group']}>
                             <label htmlFor="team-won" className={styles['form-group__label']}>Won</label>
                             <input
                                 id="team-won"
+                                min={0}
+                                max={LIMITS.count}
                                 type="number"
                                 className={styles['form-group__input']}
                                 value={teamModal.data.won}
-                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, won: parseInt(e.target.value) || 0 } })}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, won: Math.min(LIMITS.count, Math.max(0, parseInt(e.target.value) || 0)) } })}
                             />
                         </div>
                         <div className={styles['form-group']}>
                             <label htmlFor="team-lost" className={styles['form-group__label']}>Lost</label>
                             <input
                                 id="team-lost"
+                                min={0}
+                                max={LIMITS.count}
                                 type="number"
                                 className={styles['form-group__input']}
                                 value={teamModal.data.lost}
-                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, lost: parseInt(e.target.value) || 0 } })}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, lost: Math.min(LIMITS.count, Math.max(0, parseInt(e.target.value) || 0)) } })}
                             />
                         </div>
                     </div>

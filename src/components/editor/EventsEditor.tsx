@@ -6,6 +6,7 @@ import EditorModal from '@/components/editor/EditorModal';
 import EditorCard from '@/components/editor/card/EditorCard';
 import type { Event } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
+import { LIMITS } from '@/lib/validation';
 
 interface EventsEditorProps {
     events: Event[];
@@ -48,7 +49,8 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
     };
 
     const saveEvent = () => {
-        const { index, mode, data } = eventModal;
+        const { index, mode } = eventModal;
+        const data = { ...eventModal.data, title: eventModal.data.title.trim(), date: eventModal.data.date.trim() };
         if (!data.title || !data.date) return;
 
         const newEvents = [...events];
@@ -78,6 +80,7 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
                         <label htmlFor="event-title" className={styles['form-group__label']}>Title</label>
                         <input
                             id="event-title"
+                            maxLength={LIMITS.title}
                             className={styles['form-group__input']}
                             value={eventModal.data.title}
                             onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, title: e.target.value } })}
@@ -89,6 +92,7 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
                         <label htmlFor="event-date" className={styles['form-group__label']}>Date</label>
                         <input
                             id="event-date"
+                            maxLength={LIMITS.title}
                             className={styles['form-group__input']}
                             value={eventModal.data.date}
                             onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, date: e.target.value } })}
@@ -99,6 +103,7 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
                         <label htmlFor="event-description" className={styles['form-group__label']}>Description</label>
                         <textarea
                             id="event-description"
+                            maxLength={LIMITS.description}
                             className={styles['form-group__textarea']}
                             value={eventModal.data.description}
                             onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, description: e.target.value } })}
