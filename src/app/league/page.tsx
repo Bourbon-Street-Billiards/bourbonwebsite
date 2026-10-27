@@ -1,5 +1,5 @@
 import styles from './page.module.scss';
-import { getData } from '@/lib/data';
+import { getLeague, readOrEmpty } from '@/lib/data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function LeaguePage() {
-    const { league } = await getData();
+    const league = await readOrEmpty(getLeague);
     return (
 
         <main className={styles['league']}>

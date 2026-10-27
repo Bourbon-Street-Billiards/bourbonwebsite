@@ -1,5 +1,5 @@
 import styles from './page.module.scss';
-import { getData } from '@/lib/data';
+import { getMenu, readOrEmpty } from '@/lib/data';
 import MenuAccordion from '@/components/menu/MenuAccordion';
 import type { Metadata } from 'next';
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function MenuPage() {
-    const { menu } = await getData();
+    const menu = await readOrEmpty(getMenu);
     return (
 
         <main className={styles['menu']}>

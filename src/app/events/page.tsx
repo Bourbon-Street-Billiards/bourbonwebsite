@@ -1,5 +1,5 @@
 import styles from './page.module.scss';
-import { getData } from '@/lib/data';
+import { getEvents, readOrEmpty } from '@/lib/data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function EventsPage() {
-    const { events } = await getData();
+    const events = await readOrEmpty(getEvents);
     return (
 
         <main className={styles['events']}>

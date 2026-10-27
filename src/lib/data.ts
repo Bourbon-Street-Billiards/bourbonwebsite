@@ -89,14 +89,13 @@ export async function getRates(): Promise<BilliardRate[]> {
     return rows.map(row => ({ ...row, id: Number(row.id) }));
 }
 
-// For public pages: never throws, so a database outage renders empty sections instead of crashing.
-export async function getData(): Promise<AppData> {
+// For public pages: never throws, so a database outage renders an empty section instead of crashing.
+export async function readOrEmpty<T>(read: () => Promise<T[]>): Promise<T[]> {
     try {
-        const [events, menu, league, rates] = await Promise.all([getEvents(), getMenu(), getLeague(), getRates()]);
-        return { events, menu, league, rates };
+        return await read();
     } catch (error) {
         console.error('Database Error:', error);
-        return { events: [], menu: [], league: [], rates: [] };
+        return [];
     }
 }
 

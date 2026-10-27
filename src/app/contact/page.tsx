@@ -1,4 +1,4 @@
-import { getData } from '@/lib/data';
+import { getRates, readOrEmpty } from '@/lib/data';
 import styles from './page.module.scss';
 import { formatPrice } from '@/lib/format';
 import { site } from '@/lib/site';
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function ContactPage() {
-    const { rates } = await getData();
+    const rates = await readOrEmpty(getRates);
 
     return (
 
