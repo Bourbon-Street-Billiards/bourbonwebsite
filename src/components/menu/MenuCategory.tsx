@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './MenuCategory.module.scss';
-import { MenuCategory as MenuCategoryType } from '@/lib/data';
+import type { MenuCategory as MenuCategoryType } from '@/lib/data';
 import { formatPrice } from '@/lib/format';
 
 interface MenuCategoryProps {

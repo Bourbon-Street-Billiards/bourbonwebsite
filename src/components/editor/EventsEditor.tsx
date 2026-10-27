@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import EditorCard from '@/components/editor/card/EditorCard';
-import { Event } from '@/lib/data';
+import type { Event } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
 
 interface EventsEditorProps {

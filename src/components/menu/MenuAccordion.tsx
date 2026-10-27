@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MenuCategory as MenuCategoryType } from '@/lib/data';
+import type { MenuCategory as MenuCategoryType } from '@/lib/data';
 import MenuCategory from './MenuCategory';
 
 interface MenuAccordionProps {

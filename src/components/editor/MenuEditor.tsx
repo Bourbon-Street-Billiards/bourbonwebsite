@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
-import { MenuCategory, MenuItem } from '@/lib/data';
+import type { MenuCategory, MenuItem } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
 import { formatPrice } from '@/lib/format';
 

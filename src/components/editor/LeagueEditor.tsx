@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
-import { LeagueTeam } from '@/lib/data';
+import type { LeagueTeam } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
 
 interface LeagueEditorProps {
