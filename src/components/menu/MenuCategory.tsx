@@ -2,6 +2,7 @@
 
 import styles from './MenuCategory.module.scss';
 import { MenuCategory as MenuCategoryType } from '@/lib/data';
+import { formatPrice } from '@/lib/format';
 
 interface MenuCategoryProps {
     category: MenuCategoryType;
@@ -25,7 +26,7 @@ export default function MenuCategory({ category, isOpen, onToggle }: MenuCategor
                             <h3 className={styles['item__name']}>{item.name}</h3>
                             <span className={styles['item__spacer']}></span>
                             <span className={styles['item__price']}>
-                                $ {item.price.length < 3 ? item.price + '.00' : item.price}
+                                {formatPrice(item.price)}
                             </span>
                         </div>
                         <p className={styles['item__desc']}>{item.description}</p>

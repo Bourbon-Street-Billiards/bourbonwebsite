@@ -1,5 +1,6 @@
 import { getData } from '@/lib/data';
 import styles from './page.module.scss';
+import { formatPrice } from '@/lib/format';
 
 // Content is edited in the admin panel, so read it from the database on every request.
 export const dynamic = 'force-dynamic';
@@ -49,7 +50,7 @@ export default async function ContactPage() {
                         {rates.map((rate) => (
                             <div key={rate.id} className={styles['contact__rate-card']}>
                                 <h3 className={styles['contact__rate-name']}>{rate.title}</h3>
-                                <div className={styles['contact__rate-price']}>{rate.price}</div>
+                                <div className={styles['contact__rate-price']}>{formatPrice(rate.price)}</div>
                                 <p className={styles['contact__rate-desc']}>{rate.description}</p>
                             </div>
                         ))}

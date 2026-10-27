@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { BilliardRate } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
+import { formatPrice } from '@/lib/format';
 
 interface RatesEditorProps {
     rates: BilliardRate[];
@@ -115,7 +116,7 @@ export default function RatesEditor({ rates, onChange }: RatesEditorProps) {
                         <div className={styles['compact-item__info']}>
                             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
                                 <span className={styles['compact-item__name']}>{rate.title}</span>
-                                <span className={styles['compact-item__price']}>{rate.price}</span>
+                                <span className={styles['compact-item__price']}>{formatPrice(rate.price)}</span>
                             </div>
                             <span className={styles['compact-item__desc']}>{rate.description}</span>
                         </div>

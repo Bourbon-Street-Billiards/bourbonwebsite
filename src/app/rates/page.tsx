@@ -1,5 +1,6 @@
 import { getData } from '@/lib/data';
 import styles from './page.module.scss';
+import { formatPrice } from '@/lib/format';
 
 // Content is edited in the admin panel, so read it from the database on every request.
 export const dynamic = 'force-dynamic';
@@ -15,7 +16,7 @@ export default async function RatesPage() {
                 {rates.map((rate) => (
                     <div key={rate.id} className={styles['rates__card']}>
                         <h2 className={styles['rates__card-title']}>{rate.title}</h2>
-                        <div className={styles['rates__card-price']}>{rate.price}</div>
+                        <div className={styles['rates__card-price']}>{formatPrice(rate.price)}</div>
                         <p className={styles['rates__card-desc']}>{rate.description}</p>
                     </div>
                 ))}

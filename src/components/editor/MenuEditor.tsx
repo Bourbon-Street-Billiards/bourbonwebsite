@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { MenuCategory, MenuItem } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
+import { formatPrice } from '@/lib/format';
 
 interface MenuEditorProps {
     menu: MenuCategory[];
@@ -174,7 +175,7 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
                                 <div className={styles['compact-item__info']}>
                                     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
                                         <span className={styles['compact-item__name']}>{item.name}</span>
-                                        <span className={styles['compact-item__price']}>${item.price}</span>
+                                        <span className={styles['compact-item__price']}>{formatPrice(item.price)}</span>
                                     </div>
                                     <span className={styles['compact-item__desc']}>{item.description}</span>
                                 </div>
