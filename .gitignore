@@ -35,4 +35,4 @@ next-env.d.ts
 
 
 # ai walkthrough
-walkthrough.md
+walkthrough.md*.log
