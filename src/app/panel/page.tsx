@@ -132,7 +132,13 @@ export default function AdminDashboard() {
         <div className={styles['panel']}>
             <div className={styles['mobile-header']}>
                 <h2 className={styles['panel__sidebar-title']}>Bourbon Admin</h2>
-                <button className={styles['mobile-header__button']} onClick={toggleMobileMenu}>
+                <button
+                    type="button"
+                    className={styles['mobile-header__button']}
+                    onClick={toggleMobileMenu}
+                    aria-label={isMobileMenuOpen ? 'Close navigation' : 'Open navigation'}
+                    aria-expanded={isMobileMenuOpen}
+                >
                     {isMobileMenuOpen ? '✕' : '☰'}
                 </button>
             </div>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
+import EditorModal from '@/components/editor/EditorModal';
 import type { BilliardRate } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
 import { formatPrice } from '@/lib/format';
@@ -73,43 +74,43 @@ export default function RatesEditor({ rates, onChange, loading, saving }: RatesE
             <Button disabled={loading || saving} onClick={openAddRate} variant="outline" className={styles['add-button']}>Add Rate</Button>
 
             {rateModal.isOpen && (
-                <div className={styles['modal-overlay']}>
-                    <div className={styles['modal']}>
-                        <h3 className={styles['modal__title']}>{rateModal.mode === 'add' ? 'Add Rate' : 'Edit Rate'}</h3>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Title</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={rateModal.data.title}
-                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, title: e.target.value } })}
-                                placeholder="e.g., Hourly Rate"
-                                autoFocus
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Price</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={rateModal.data.price}
-                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, price: e.target.value } })}
-                                placeholder="$0.00"
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Description</label>
-                            <textarea
-                                className={styles['form-group__textarea']}
-                                value={rateModal.data.description}
-                                onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, description: e.target.value } })}
-                                placeholder="Details..."
-                            />
-                        </div>
-                        <div className={styles['modal__actions']}>
-                            <Button onClick={closeRateModal} variant="outline">Cancel</Button>
-                            <Button onClick={saveRate}>{rateModal.mode === 'add' ? 'Add' : 'Save'}</Button>
-                        </div>
+                <EditorModal title={rateModal.mode === 'add' ? 'Add Rate' : 'Edit Rate'} onClose={closeRateModal}>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="rate-title" className={styles['form-group__label']}>Title</label>
+                        <input
+                            id="rate-title"
+                            className={styles['form-group__input']}
+                            value={rateModal.data.title}
+                            onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, title: e.target.value } })}
+                            placeholder="e.g., Hourly Rate"
+                            autoFocus
+                        />
                     </div>
-                </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="rate-price" className={styles['form-group__label']}>Price</label>
+                        <input
+                            id="rate-price"
+                            className={styles['form-group__input']}
+                            value={rateModal.data.price}
+                            onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, price: e.target.value } })}
+                            placeholder="$0.00"
+                        />
+                    </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="rate-description" className={styles['form-group__label']}>Description</label>
+                        <textarea
+                            id="rate-description"
+                            className={styles['form-group__textarea']}
+                            value={rateModal.data.description}
+                            onChange={(e) => setRateModal({ ...rateModal, data: { ...rateModal.data, description: e.target.value } })}
+                            placeholder="Details..."
+                        />
+                    </div>
+                    <div className={styles['modal__actions']}>
+                        <Button onClick={closeRateModal} variant="outline">Cancel</Button>
+                        <Button onClick={saveRate}>{rateModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                    </div>
+                </EditorModal>
             )}
 
             <div className={styles['card-grid']}>

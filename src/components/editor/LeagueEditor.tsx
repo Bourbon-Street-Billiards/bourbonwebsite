@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
+import EditorModal from '@/components/editor/EditorModal';
 import type { LeagueTeam } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
 
@@ -73,72 +74,75 @@ export default function LeagueEditor({ league, onChange, loading, saving }: Leag
             <Button disabled={loading || saving} onClick={openAddTeam} variant="outline" className={styles['add-button']}>Add Team</Button>
 
             {teamModal.isOpen && (
-                <div className={styles['modal-overlay']}>
-                    <div className={styles['modal']}>
-                        <h3 className={styles['modal__title']}>{teamModal.mode === 'add' ? 'Add Team' : 'Edit Team'}</h3>
+                <EditorModal title={teamModal.mode === 'add' ? 'Add Team' : 'Edit Team'} onClose={closeTeamModal}>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="team-rank" className={styles['form-group__label']}>Rank</label>
+                        <input
+                            id="team-rank"
+                            type="number"
+                            className={styles['form-group__input']}
+                            value={teamModal.data.rank}
+                            onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, rank: parseInt(e.target.value) || 0 } })}
+                        />
+                    </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="team-team-name" className={styles['form-group__label']}>Team Name</label>
+                        <input
+                            id="team-team-name"
+                            className={styles['form-group__input']}
+                            value={teamModal.data.team}
+                            onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, team: e.target.value } })}
+                            placeholder="Team Name"
+                            autoFocus
+                        />
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Rank</label>
+                            <label htmlFor="team-points" className={styles['form-group__label']}>Points</label>
                             <input
+                                id="team-points"
                                 type="number"
                                 className={styles['form-group__input']}
-                                value={teamModal.data.rank}
-                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, rank: parseInt(e.target.value) || 0 } })}
+                                value={teamModal.data.points}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, points: parseInt(e.target.value) || 0 } })}
                             />
                         </div>
                         <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Team Name</label>
+                            <label htmlFor="team-played" className={styles['form-group__label']}>Played</label>
                             <input
+                                id="team-played"
+                                type="number"
                                 className={styles['form-group__input']}
-                                value={teamModal.data.team}
-                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, team: e.target.value } })}
-                                placeholder="Team Name"
-                                autoFocus
+                                value={teamModal.data.played}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, played: parseInt(e.target.value) || 0 } })}
                             />
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                            <div className={styles['form-group']}>
-                                <label className={styles['form-group__label']}>Points</label>
-                                <input
-                                    type="number"
-                                    className={styles['form-group__input']}
-                                    value={teamModal.data.points}
-                                    onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, points: parseInt(e.target.value) || 0 } })}
-                                />
-                            </div>
-                            <div className={styles['form-group']}>
-                                <label className={styles['form-group__label']}>Played</label>
-                                <input
-                                    type="number"
-                                    className={styles['form-group__input']}
-                                    value={teamModal.data.played}
-                                    onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, played: parseInt(e.target.value) || 0 } })}
-                                />
-                            </div>
-                            <div className={styles['form-group']}>
-                                <label className={styles['form-group__label']}>Won</label>
-                                <input
-                                    type="number"
-                                    className={styles['form-group__input']}
-                                    value={teamModal.data.won}
-                                    onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, won: parseInt(e.target.value) || 0 } })}
-                                />
-                            </div>
-                            <div className={styles['form-group']}>
-                                <label className={styles['form-group__label']}>Lost</label>
-                                <input
-                                    type="number"
-                                    className={styles['form-group__input']}
-                                    value={teamModal.data.lost}
-                                    onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, lost: parseInt(e.target.value) || 0 } })}
-                                />
-                            </div>
+                        <div className={styles['form-group']}>
+                            <label htmlFor="team-won" className={styles['form-group__label']}>Won</label>
+                            <input
+                                id="team-won"
+                                type="number"
+                                className={styles['form-group__input']}
+                                value={teamModal.data.won}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, won: parseInt(e.target.value) || 0 } })}
+                            />
                         </div>
-                        <div className={styles['modal__actions']}>
-                            <Button onClick={closeTeamModal} variant="outline">Cancel</Button>
-                            <Button onClick={saveTeam}>{teamModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                        <div className={styles['form-group']}>
+                            <label htmlFor="team-lost" className={styles['form-group__label']}>Lost</label>
+                            <input
+                                id="team-lost"
+                                type="number"
+                                className={styles['form-group__input']}
+                                value={teamModal.data.lost}
+                                onChange={(e) => setTeamModal({ ...teamModal, data: { ...teamModal.data, lost: parseInt(e.target.value) || 0 } })}
+                            />
                         </div>
                     </div>
-                </div>
+                    <div className={styles['modal__actions']}>
+                        <Button onClick={closeTeamModal} variant="outline">Cancel</Button>
+                        <Button onClick={saveTeam}>{teamModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                    </div>
+                </EditorModal>
             )}
 
             <div className={styles['data-table-container']}>

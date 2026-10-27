@@ -22,6 +22,7 @@ export default async function ContactPage() {
                         <p className={styles['contact__info-text']}>{site.city}</p>
                         <div className={styles['contact__map']}>
                             <iframe
+                                title="Map to Bourbon Street Billiards"
                                 src="https://maps.google.com/maps?q=Bourbon%20Street%20Billiards%20241%20Vaughan%20St%20Winnipeg%20MB&t=&z=15&ie=UTF8&iwloc=&output=embed"
                                 width="100%"
                                 height="100%"

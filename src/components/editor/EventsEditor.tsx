@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
+import EditorModal from '@/components/editor/EditorModal';
 import EditorCard from '@/components/editor/card/EditorCard';
 import type { Event } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
@@ -72,43 +73,43 @@ export default function EventsEditor({ events, onChange, saving, loading }: Even
             <Button disabled={loading || saving} onClick={openAddEvent} variant="outline" className={styles['add-button']}>Add Event</Button>
 
             {eventModal.isOpen && (
-                <div className={styles['modal-overlay']}>
-                    <div className={styles['modal']}>
-                        <h3 className={styles['modal__title']}>{eventModal.mode === 'add' ? 'Add Event' : 'Edit Event'}</h3>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Title</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={eventModal.data.title}
-                                onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, title: e.target.value } })}
-                                placeholder="Event Title"
-                                autoFocus
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Date</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={eventModal.data.date}
-                                onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, date: e.target.value } })}
-                                placeholder="e.g., Oct 12, 8PM or Every Thursday, 7PM"
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Description</label>
-                            <textarea
-                                className={styles['form-group__textarea']}
-                                value={eventModal.data.description}
-                                onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, description: e.target.value } })}
-                                placeholder="Event details..."
-                            />
-                        </div>
-                        <div className={styles['modal__actions']}>
-                            <Button onClick={closeEventModal} variant="outline">Cancel</Button>
-                            <Button onClick={saveEvent}>{eventModal.mode === 'add' ? 'Add' : 'Save'}</Button>
-                        </div>
+                <EditorModal title={eventModal.mode === 'add' ? 'Add Event' : 'Edit Event'} onClose={closeEventModal}>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="event-title" className={styles['form-group__label']}>Title</label>
+                        <input
+                            id="event-title"
+                            className={styles['form-group__input']}
+                            value={eventModal.data.title}
+                            onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, title: e.target.value } })}
+                            placeholder="Event Title"
+                            autoFocus
+                        />
                     </div>
-                </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="event-date" className={styles['form-group__label']}>Date</label>
+                        <input
+                            id="event-date"
+                            className={styles['form-group__input']}
+                            value={eventModal.data.date}
+                            onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, date: e.target.value } })}
+                            placeholder="e.g., Oct 12, 8PM or Every Thursday, 7PM"
+                        />
+                    </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="event-description" className={styles['form-group__label']}>Description</label>
+                        <textarea
+                            id="event-description"
+                            className={styles['form-group__textarea']}
+                            value={eventModal.data.description}
+                            onChange={(e) => setEventModal({ ...eventModal, data: { ...eventModal.data, description: e.target.value } })}
+                            placeholder="Event details..."
+                        />
+                    </div>
+                    <div className={styles['modal__actions']}>
+                        <Button onClick={closeEventModal} variant="outline">Cancel</Button>
+                        <Button onClick={saveEvent}>{eventModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                    </div>
+                </EditorModal>
             )}
 
             <div className={styles['card-grid']}>

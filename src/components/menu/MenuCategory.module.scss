@@ -21,6 +21,20 @@
     }
 }
 
+.category__toggle {
+    all: unset;
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 1px solid var(--color-accent);
+        outline-offset: 4px;
+    }
+}
+
 .category__icon {
     font-size: 0.7rem;
     transition: transform 0.3s ease;

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
+import EditorModal from '@/components/editor/EditorModal';
 import type { MenuCategory, MenuItem } from '@/lib/data';
 import styles from '@/app/panel/page.module.scss';
 import { formatPrice } from '@/lib/format';
@@ -97,65 +98,63 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
             <Button disabled={loading || saving} onClick={() => setIsAddingCategory(true)} variant="outline" className={styles['add-button']}>Add Category</Button>
 
             {isAddingCategory && (
-                <div className={styles['modal-overlay']}>
-                    <div className={styles['modal']}>
-                        <h3 className={styles['modal__title']}>New Category</h3>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Category Title</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={newCategoryTitle}
-                                onChange={(e) => setNewCategoryTitle(e.target.value)}
-                                placeholder="e.g., Starters"
-                                autoFocus
-                            />
-                        </div>
-                        <div className={styles['modal__actions']}>
-                            <Button disabled={loading || saving} onClick={() => setIsAddingCategory(false)} variant="outline">Cancel</Button>
-                            <Button disabled={loading || saving} onClick={addCategory}>Create</Button>
-                        </div>
+                <EditorModal title="New Category" onClose={() => setIsAddingCategory(false)}>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="menu-category-title" className={styles['form-group__label']}>Category Title</label>
+                        <input
+                            id="menu-category-title"
+                            className={styles['form-group__input']}
+                            value={newCategoryTitle}
+                            onChange={(e) => setNewCategoryTitle(e.target.value)}
+                            placeholder="e.g., Starters"
+                            autoFocus
+                        />
                     </div>
-                </div>
+                    <div className={styles['modal__actions']}>
+                        <Button disabled={loading || saving} onClick={() => setIsAddingCategory(false)} variant="outline">Cancel</Button>
+                        <Button disabled={loading || saving} onClick={addCategory}>Create</Button>
+                    </div>
+                </EditorModal>
             )}
 
             {itemModal.isOpen && (
-                <div className={styles['modal-overlay']}>
-                    <div className={styles['modal']}>
-                        <h3 className={styles['modal__title']}>{itemModal.mode === 'add' ? 'Add Item' : 'Edit Item'}</h3>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Name</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={itemModal.data.name}
-                                onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, name: e.target.value } })}
-                                placeholder="Item Name"
-                                autoFocus
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Price</label>
-                            <input
-                                className={styles['form-group__input']}
-                                value={itemModal.data.price}
-                                onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, price: e.target.value } })}
-                                placeholder="$0.00"
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
-                            <label className={styles['form-group__label']}>Description</label>
-                            <textarea
-                                className={styles['form-group__textarea']}
-                                value={itemModal.data.description}
-                                onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, description: e.target.value } })}
-                                placeholder="Description..."
-                            />
-                        </div>
-                        <div className={styles['modal__actions']}>
-                            <Button disabled={loading || saving} onClick={closeItemModal} variant="outline">Cancel</Button>
-                            <Button disabled={loading || saving} onClick={saveItem}>{itemModal.mode === 'add' ? 'Add' : 'Save'}</Button>
-                        </div>
+                <EditorModal title={itemModal.mode === 'add' ? 'Add Item' : 'Edit Item'} onClose={closeItemModal}>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="menu-name" className={styles['form-group__label']}>Name</label>
+                        <input
+                            id="menu-name"
+                            className={styles['form-group__input']}
+                            value={itemModal.data.name}
+                            onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, name: e.target.value } })}
+                            placeholder="Item Name"
+                            autoFocus
+                        />
                     </div>
-                </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="menu-price" className={styles['form-group__label']}>Price</label>
+                        <input
+                            id="menu-price"
+                            className={styles['form-group__input']}
+                            value={itemModal.data.price}
+                            onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, price: e.target.value } })}
+                            placeholder="$0.00"
+                        />
+                    </div>
+                    <div className={styles['form-group']}>
+                        <label htmlFor="menu-description" className={styles['form-group__label']}>Description</label>
+                        <textarea
+                            id="menu-description"
+                            className={styles['form-group__textarea']}
+                            value={itemModal.data.description}
+                            onChange={(e) => setItemModal({ ...itemModal, data: { ...itemModal.data, description: e.target.value } })}
+                            placeholder="Description..."
+                        />
+                    </div>
+                    <div className={styles['modal__actions']}>
+                        <Button disabled={loading || saving} onClick={closeItemModal} variant="outline">Cancel</Button>
+                        <Button disabled={loading || saving} onClick={saveItem}>{itemModal.mode === 'add' ? 'Add' : 'Save'}</Button>
+                    </div>
+                </EditorModal>
             )}
 
             {menu.map((category, catIndex) => (
