@@ -2,6 +2,7 @@ import { authClient } from '@/lib/auth/client';
 import { NeonAuthUIProvider } from '@neondatabase/auth/react';
 import type { Metadata } from 'next';
 import './globals.scss';
+import { siteUrl } from '@/lib/site-url';
 
 import NextTopLoader from 'nextjs-toploader';
 import Header from '@/components/layout/Header';
@@ -31,7 +32,7 @@ const crimson = Crimson_Text({
 });
 
 export const metadata: Metadata = {
-    metadataBase: new URL(process.env.SITE_URL ?? 'http://localhost:3000'),
+    metadataBase: siteUrl,
     title: {
         default: 'Bourbon Street Billiards | Pool Hall in Winnipeg',
         template: '%s | Bourbon Street Billiards',

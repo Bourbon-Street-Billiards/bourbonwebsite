@@ -1,8 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { siteUrl } from '@/lib/site-url';
 
-const siteUrl = process.env.SITE_URL ?? 'http://localhost:3000';
 const pages = ['', '/events', '/menu', '/league', '/rates', '/gallery', '/contact'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    return pages.map((path) => ({ url: `${siteUrl}${path}` }));
+    return pages.map((path) => ({ url: new URL(path || '/', siteUrl).href }));
 }
