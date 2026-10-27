@@ -56,12 +56,13 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
         const { catIndex, itemIndex, mode, data } = itemModal;
         if (!data.name || !data.price) return;
 
-        const newMenu = [...menu];
-        if (mode === 'add') {
-            newMenu[catIndex].items.push(data);
-        } else if (mode === 'edit' && itemIndex !== undefined) {
-            newMenu[catIndex].items[itemIndex] = data;
-        }
+        const newMenu = menu.map((category, i) => {
+            if (i !== catIndex) return category;
+            const items = mode === 'edit' && itemIndex !== undefined
+                ? category.items.map((item, j) => (j === itemIndex ? data : item))
+                : [...category.items, data];
+            return { ...category, items };
+        });
         onChange(newMenu);
         closeItemModal();
     };
@@ -83,8 +84,9 @@ export default function MenuEditor({ menu, onChange, loading, saving }: MenuEdit
 
     const deleteItem = (catIndex: number, itemIndex: number) => {
         if (confirm('Delete this item?')) {
-            const newMenu = [...menu];
-            newMenu[catIndex].items = newMenu[catIndex].items.filter((_, i) => i !== itemIndex);
+            const newMenu = menu.map((category, i) =>
+                i === catIndex ? { ...category, items: category.items.filter((_, j) => j !== itemIndex) } : category
+            );
             onChange(newMenu);
         }
     };
