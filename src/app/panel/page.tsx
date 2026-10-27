@@ -16,13 +16,27 @@ type SavingState = Record<Section, boolean>;
 
 const SECTIONS: Section[] = ['events', 'menu', 'league', 'rates'];
 
+// Turns a failed save response into a short message, naming the invalid field for 400s.
+async function describeSaveError(res: Response): Promise<string> {
+    if (res.status === 401) return 'your session expired, sign in again';
+    try {
+        const body = await res.json();
+        const issue = body.issues?.[0];
+        if (issue) return `${issue.path.join(' › ')}: ${issue.message}`;
+    } catch {
+        // Non-JSON error body
+    }
+    return `server error (${res.status})`;
+}
+
 export default function AdminDashboard() {
     const [data, setData] = useState<AppData | null>(null);
     const [activeTab, setActiveTab] = useState<Section>('events');
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState(false);
     const [saving, setSaving] = useState<SavingState>({ events: false, menu: false, league: false, rates: false });
-    const [saveError, setSaveError] = useState(false);
+    // Per-section save errors, so a later success elsewhere can't hide a failure.
+    const [saveErrors, setSaveErrors] = useState<Partial<Record<Section, string>>>({});
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
@@ -60,6 +74,7 @@ export default function AdminDashboard() {
     }, [router, session, isPending, isAdmin]);
 
     const isSaving = SECTIONS.some(section => saving[section]);
+    const failedSections = SECTIONS.filter(section => saveErrors[section]);
 
     // Warn before leaving while a debounced or in-flight save is pending.
     useEffect(() => {
@@ -90,12 +105,13 @@ export default function AdminDashboard() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(value),
             });
-            if (!res.ok) throw new Error(`Save failed with status ${res.status}`);
-            setSaveError(false);
+            if (!res.ok) throw new Error(await describeSaveError(res));
+            setSaveErrors(({ [section]: _, ...rest }) => rest);
             setLastSaved(new Date());
         } catch (error) {
             console.error(`Failed to save ${section}`, error);
-            setSaveError(true);
+            const message = error instanceof Error ? error.message : 'Unknown error';
+            setSaveErrors(e => ({ ...e, [section]: message }));
         } finally {
             setSaving(s => ({ ...s, [section]: false }));
         }
@@ -165,8 +181,10 @@ export default function AdminDashboard() {
                         Status:
                         {isSaving ? (
                             <span style={{ color: 'var(--color-accent)' }}>Saving...</span>
-                        ) : saveError ? (
-                            <span role="alert" style={{ color: '#ff4444' }}>Save failed. Your last change was not stored.</span>
+                        ) : failedSections.length > 0 ? (
+                            <span role="alert" style={{ color: '#ff4444' }}>
+                                Changes not saved. {failedSections.map(section => `${section}: ${saveErrors[section]}`).join('; ')}
+                            </span>
                         ) : lastSaved ? (
                             <span style={{ color: 'var(--color-text-muted)' }}>Saved {lastSaved.toLocaleTimeString()}</span>
                         ) : (
